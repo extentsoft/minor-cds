@@ -38,8 +38,8 @@ Some introductory information
 
 [revel_tanda_component_integration]: https://www.lucidchart.com/publicSegments/view/6aa90135-4840-4faf-b845-cbce73e8077f/image.png "High Level Integraion of Revel and Tanda"
 
-[tanda_humanica_component_integration]: https://www.lucidchart.com/publicSegments/view/da1909d3-2a44-4170-a8a7-e21fc74fe5a0/image.png "High Level Integraion of Tanda and Humanica"
+[tanda_humanica_component_integration]: https://www.lucidchart.com/publicSegments/view/216ddd53-f3c6-4d22-9ec6-c258e7c71ad4/image.png "High Level Integraion of Tanda and Humanica"
 
-[smartcareer_revel_component_integration]: https://www.lucidchart.com/publicSegments/view/839627f8-70f8-4f49-a9b5-584648846130/image.png "High Level Integraion of Smart Career and Revel"
+[smartcareer_revel_component_integration]: https://www.lucidchart.com/publicSegments/view/68fdfc1b-8c58-49cb-9796-5b2105e3826d/image.png "High Level Integraion of Smart Career and Revel"
 
-[revel_mschool_component_integration]: https://www.lucidchart.com/publicSegments/view/b21bf278-3d16-4cab-b54e-4b386cd7dad0/image.png "High Level Integraion of Revel and mSchool"
+[revel_mschool_component_integration]: https://www.lucidchart.com/publicSegments/view/39c4437f-7686-4096-95e5-fab928f8a3b0/image.png "High Level Integraion of Revel and mSchool"
