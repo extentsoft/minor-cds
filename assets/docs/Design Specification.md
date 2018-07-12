@@ -1,36 +1,36 @@
-#Introduction
+# Introduction
 
 ![alt text][solution_overview]
 Some introductory information
 
-#Integration Overview
-##FSR Transformation (No Delivery) #phase-1
-###Revel - Tanda
+# Integration Overview
+## FSR Transformation (No Delivery) #phase-1
+### Revel - Tanda
 ![alt text][revel_tanda_component_integration]
 
-###Tanda - Humanica
+### Tanda - Humanica
 ![alt text][tanda_humanica_component_integration]
 
-###Smart Career - mSchool
+### Smart Career - mSchool
 ![alt text][smartcareer_mschool_component_integration]
 
-###Smart Career - Revel
+### Smart Career - Revel
 ![alt text][smartcareer_revel_component_integration]
 
-##DEMCO/XX Transformation
-###SDM --> OMS
-###Revel --> OMS
-##Live Transformation
+## DEMCO/XX Transformation
+### SDM --> OMS
+### Revel --> OMS
+## Live Transformation
 
-#Technical Specification
-  ##fewfw
+# Technical Specification
+  ## fewfw
 
-#Appendix-A: Mapping Specification
-  ##xx
+# Appendix-A: Mapping Specification
+  ## xx
 
-#Appendix-B: Lookup and Datastore
-  ##aa
-  ##bb
+# Appendix-B: Lookup and Datastore
+  ## aa
+  ## bb
 
 
 [solution_overview]: https://www.lucidchart.com/publicSegments/view/9cea77c6-1485-4574-ac74-56ec84dd9bc8/image.png "Solution Overview"
