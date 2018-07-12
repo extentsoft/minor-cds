@@ -15,7 +15,7 @@ Some introductory information
 ![Smart Career - Revel][smartcareer_revel_component_integration]
 
 ### Account Generation
-![Revel - mSchool][smartcareer_mschool_component_integration]
+![Revel - mSchool][revel_mschool_component_integration]
 
 
 ## DEMCO/XX Transformation
