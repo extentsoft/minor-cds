@@ -24,8 +24,8 @@ Some introductory information
 ## Live Transformation
 
 # Technical Specification
-  ## Revel-Tanda
-    ![Revel - Tanda][revel_tanda_wiring_diagram]
+## Revel-Tanda
+![Revel - Tanda][revel_tanda_wiring_diagram]
 
 # Appendix-A: Mapping Specification
   ## xx
