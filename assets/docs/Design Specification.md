@@ -25,10 +25,12 @@ Some introductory information
 
 # Technical Specification
 ## Revel-Tanda
-![Revel - Tanda][revel_tanda_wiring_diagram]
+![Revel - Tanda Diagram][revel_tanda_wiring_diagram]
 
 # Appendix-A: Mapping Specification
-  ## xx
+## Revel-Sterling
+![Revel - Sterling Diagram][revel_sterling_mapping]
+
 
 # Appendix-B: Lookup and Datastore
   ## aa
@@ -46,3 +48,7 @@ Some introductory information
 [revel_mschool_component_integration]: https://www.lucidchart.com/publicSegments/view/39c4437f-7686-4096-95e5-fab928f8a3b0/image.png "High Level Integraion of Revel and mSchool"
 
 [revel_tanda_wiring_diagram]: https://www.lucidchart.com/publicSegments/view/a4ededd4-8869-4a3c-bb02-f23f99679d1d/image.png "Wiring Diagram - Revel and Tanda"
+
+[revel_sterling_mapping]: https://www.lucidchart.com/publicSegments/view/2bf05a7d-2414-4636-a695-e492e2bb08c8/image.png "Mapping Specification - Revel and Sterling"
+
+
