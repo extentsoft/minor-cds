@@ -24,7 +24,8 @@ Some introductory information
 ## Live Transformation
 
 # Technical Specification
-  ## fewfw
+  ## Revel-Tanda
+    ![Revel - Tanda][revel_tanda_wiring_diagram]
 
 # Appendix-A: Mapping Specification
   ## xx
@@ -43,3 +44,5 @@ Some introductory information
 [smartcareer_revel_component_integration]: https://www.lucidchart.com/publicSegments/view/68fdfc1b-8c58-49cb-9796-5b2105e3826d/image.png "High Level Integraion of Smart Career and Revel"
 
 [revel_mschool_component_integration]: https://www.lucidchart.com/publicSegments/view/39c4437f-7686-4096-95e5-fab928f8a3b0/image.png "High Level Integraion of Revel and mSchool"
+
+[revel_tanda_wiring_diagram]: https://www.lucidchart.com/publicSegments/view/a4ededd4-8869-4a3c-bb02-f23f99679d1d/image.png "Wiring Diagram - Revel and Tanda"
