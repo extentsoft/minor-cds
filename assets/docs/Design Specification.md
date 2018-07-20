@@ -27,6 +27,47 @@ Some introductory information
 ## Revel-Tanda
 ![Revel - Tanda Diagram][revel_tanda_wiring_diagram]
 
+### Location
+```
+GET https://minor-demo.revelup.com/resources/Address/?format=json
+POST https://my.tanda.co/api/v2/locations
+```
+| Revel Field | Type      | Constraint | Computation Logic | Tanda Field | Type      | Constraint |
+| ----------- | --------- | ---------- | ----------------- | ----------- | --------- | ---------- |
+| **id**      | Integer   | Unique     |                   |             |           |            |
+| uuid        | UUID      |            |                   |             |           |            |
+| country     | String    |            | concat(contry)    | address     | String    |            |
+| province    | String    |            | concat(province)  |             |           |            |
+| city_name   | String    |            | concat(city_name) |             |           |            |
+| district    | String    |            | concat(district)  |             |           |            |
+| zipcode     | String    |            | concat(zipcode)   |             |           |            |
+| latitude    | Float     |            |                   | latitude    | Float     |            |
+| longitude   | Float     |            |                   | longitude   | Float     |            |
+| active      | Boolean   |            |                   |             |           |            |
+| alias       | String    |            |                   | name        | String    |            |
+|             |           |            | substring(0,1).toUpperCase() | short_name  |           |            |
+| building_number | String    |            |                   |             |           |            |
+| created_date    | Datetime  |            |                   |             |           |            |
+| ########### | ######### | ########## | ################# | ########### | ######### | ########## |
+|             |           |            |                   | specific_holiday_dates    | DateRange     |            |
+
+
+
+
+### Team/Department
+```
+curl -x GET https://minor-demo.revelup.com/resources/Address/?format=json
+```
+
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+
+### User
+
+
 # Appendix-A: Mapping Specification
 ## Revel-Sterling
 ![Revel - Sterling Diagram][revel_sterling_mapping]
