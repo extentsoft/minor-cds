@@ -31,6 +31,45 @@ Some introductory information
 ```
 GET https://minor-demo.revelup.com/resources/Address/?format=json
 POST https://my.tanda.co/api/v2/locations
+POST https://staging.tanda.co/api/v2/locations
+```
+
+```
+contact name: PZ-1111 Avani Riverside
+site number: 
+address line1:
+address line2: 
+email: xxxxxxx@minor.com (revel id)
+```
+
+```
+database = db2
+```
+
+| Revel Field | Type      | Constraint | Computation Logic | Tanda Field | Type      | Constraint |
+| ----------- | --------- | ---------- | ----------------- | ----------- | --------- | ---------- |
+| **id**      | Integer   | Unique     |                   |             |           |            |
+| uuid        | UUID      |            |                   |             |           |            |
+| country     | String    |            | concat(contry)    | address     | String    |            |
+| province    | String    |            | concat(province)  |             |           |            |
+| city_name   | String    |            | concat(city_name) |             |           |            |
+| district    | String    |            | concat(district)  |             |           |            |
+| zipcode     | String    |            | concat(zipcode)   |             |           |            |
+| latitude    | Float     |            |                   | latitude    | Float     |            |
+| longitude   | Float     |            |                   | longitude   | Float     |            |
+| active      | Boolean   |            |                   |             |           |            |
+| alias       | String    |            |                   | name        | String    |            |
+|             |           |            | substring(0,1).toUpperCase() | short_name  |           |            |
+| building_number | String    |            |                   |             |           |            |
+| created_date    | Datetime  |            |                   |             |           |            |
+| ########### | ######### | ########## | ################# | ########### | ######### | ########## |
+|             |           |            |                   | specific_holiday_dates    | DateRange     | Ignore        |
+
+
+### Team/Department
+```
+curl -x GET https://minor-demo.revelup.com/resources/Address/?format=json
+
 ```
 | Revel Field | Type      | Constraint | Computation Logic | Tanda Field | Type      | Constraint |
 | ----------- | --------- | ---------- | ----------------- | ----------- | --------- | ---------- |
@@ -52,20 +91,29 @@ POST https://my.tanda.co/api/v2/locations
 |             |           |            |                   | specific_holiday_dates    | DateRange     |            |
 
 
-
-
-### Team/Department
+### User
 ```
 curl -x GET https://minor-demo.revelup.com/resources/Address/?format=json
 ```
+| Revel Field | Type      | Constraint | Computation Logic | Tanda Field | Type      | Constraint |
+| ----------- | --------- | ---------- | ----------------- | ----------- | --------- | ---------- |
+| **id**      | Integer   | Unique     |                   |             |           |            |
+| uuid        | UUID      |            |                   |             |           |            |
+| country     | String    |            | concat(contry)    | address     | String    |            |
+| province    | String    |            | concat(province)  |             |           |            |
+| city_name   | String    |            | concat(city_name) |             |           |            |
+| district    | String    |            | concat(district)  |             |           |            |
+| zipcode     | String    |            | concat(zipcode)   |             |           |            |
+| latitude    | Float     |            |                   | latitude    | Float     |            |
+| longitude   | Float     |            |                   | longitude   | Float     |            |
+| active      | Boolean   |            |                   |             |           |            |
+| alias       | String    |            |                   | name        | String    |            |
+|             |           |            | substring(0,1).toUpperCase() | short_name  |           |            |
+| building_number | String    |            |                   |             |           |            |
+| created_date    | Datetime  |            |                   |             |           |            |
+| ########### | ######### | ########## | ################# | ########### | ######### | ########## |
+|             |           |            |                   | specific_holiday_dates    | DateRange     |            |
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-
-### User
 
 
 # Appendix-A: Mapping Specification
