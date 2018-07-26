@@ -25,7 +25,38 @@ Some introductory information
 
 # Technical Specification
 ## Revel-Tanda
+
+### Interface Overview
 ![Revel - Tanda Diagram][revel_tanda_wiring_diagram]
+
+### Entity Relationship - Revel
+![Revel ER][revel_er]
+
+### Entity Relationship - Tanda
+![Tanda ER][tanda_er]
+
+
+### Location
+
+#### Process Mapping
+![Revel - Tanda Diagram][map_process_location_revel_tanda]
+#### Field Mapping
+![Revel - Tanda Diagram][map_field_location_revel_tanda]
+
+
+### Department
+
+#### Process Mapping
+![Revel - Tanda Diagram][map_process_team_revel_tanda]
+#### Field Mapping
+![Revel - Tanda Diagram][map_field_team_revel_tanda]
+
+### User
+
+#### Process Mapping
+![Revel - Tanda Diagram][map_process_user_revel_tanda]
+#### Field Mapping
+![Revel - Tanda Diagram][map_field_user_revel_tanda]
 
 ### Location
 ```
@@ -141,3 +172,23 @@ curl -x GET https://minor-demo.revelup.com/resources/Address/?format=json
 [revel_sterling_mapping]: https://www.lucidchart.com/publicSegments/view/2bf05a7d-2414-4636-a695-e492e2bb08c8/image.png "Mapping Specification - Revel and Sterling"
 
 
+[tanda_er]: https://www.lucidchart.com/publicSegments/view/e10aefe2-49a1-4db6-80d2-11947b9b9bef/image.png "Entity Relationship - Tanda"
+
+[revel_er]: https://www.lucidchart.com/publicSegments/view/50f85f85-681d-4840-a138-3e91d7a2fe60/image.png "Entity Relationship - Revel"
+
+
+[map_process_location_revel_tanda]: https://www.lucidchart.com/publicSegments/view/b80b91d4-fca3-435f-a359-5e03ea00e8d3/image.png "Process Mapping - Location (Revel to Tanda)"
+
+[map_field_location_revel_tanda]: https://www.lucidchart.com/publicSegments/view/4b437fa5-35e5-4247-8837-0373ed0a7a9e/image.png "Field Mapping - Location (Revel to Tanda)"
+
+[map_process_team_revel_tanda]: https://www.lucidchart.com/publicSegments/view/40df4279-0d2d-45fd-acb8-983cdbebd6e5/image.png "Process Mapping - Team (Revel to Tanda)"
+
+[map_field_team_revel_tanda]: https://www.lucidchart.com/publicSegments/view/844088a1-b360-48e6-8b15-f1625e2f4223/image.png "Field Mapping - Team (Revel to Tanda)"
+
+[map_process_user_revel_tanda]: https://www.lucidchart.com/publicSegments/view/da524f98-65ad-4da9-bb5e-960e94e85d5e/image.png "Process Mapping - User (Revel to Tanda)"
+
+[map_field_user_revel_tanda]: https://www.lucidchart.com/publicSegments/view/74fcdda3-fa5a-4ae6-a2bc-a15a764396bf/image.png "Field Mapping - User (Revel to Tanda)"
+
+[map_process_manager_revel_tanda]: https://www.lucidchart.com/publicSegments/view/da524f98-65ad-4da9-bb5e-960e94e85d5e/image.png "Process Mapping - Manager (Revel to Tanda)"
+
+[map_field_manager_revel_tanda]: https://www.lucidchart.com/publicSegments/view/5b460e9a-68d9-44d3-9446-ab29d8b0b12d/image.png "Field Mapping - Manager (Revel to Tanda)"
