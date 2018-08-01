@@ -18,6 +18,7 @@
   "homepage": "https://github.com/thanakorn-es/minor-cds#readme",
   "dependencies": {
     "app-root-path": "^2.1.0",
+    "bluebird": "^3.5.1",
     "morgan": "^1.9.0",
     "winston": "^3.0.0"
   }

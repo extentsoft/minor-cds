@@ -2,6 +2,7 @@ var appRoot = require('app-root-path');
 var request = require('request');
 var morgan = require('morgan');
 var winston = require('winston');
+var Promise = require('bluebird');
 
 /*
 curl --header "Authorization: bearer 8b948cd56c9df2deb3ee678b688f560beb87dd695eba68ff1ca3c08c87b44121" https://staging.tanda.co/api/v2/locations
@@ -154,7 +155,8 @@ function fn_revel_get__locations(params){
     request(revel_get__locations, function(error, response, body){
       if (!error && response.statusCode == 200) {        
         var info = JSON.parse(body);         
-        resolve({in:params.in, out: {locations : info}});
+        params["establishments"] = info;
+        resolve(params);
       }
       else{
         resolve({in:params.in, out: error});
@@ -222,30 +224,38 @@ function a(params){
   });
 }
 
-var params = {
-  in: {
-    __message:'Revel-Establishment to Tanda-Location'
-  },
-  out:{}
-};
 
-fn_revel_get__locations(params)
+fn_revel_get__locations({})
   .then(function(messageObject){ // log location
     console.log(messageObject);
+    return messageObject;
   })
-  .then(function(establishments){ // select location
-    console.log(establishments);
-
-    _establishments = JSON.parse(establishments);
-    return {
-      in: params.in,
-      out: _establishments.objects
-    }; 
-  })
-  .then(function(messageObject){ // log location
+  .then(function(messageObject){ // select location    
+    _establishments = messageObject.establishments.objects;
+    messageObject["establishments"] = _establishments
     console.log(messageObject);
-  });/*
-  .then(fn_revel_get__addresses)
+    return messageObject;
+  })
+  .then(function(messageObject){
+     var tmpl_post__location = {
+      url: 'https://my.tanda.co/api/v2/locations',
+      method: 'POST',
+      headers: tanda_headers,
+      /*body: {
+        "name": "Metro Site #1",
+        "short_name": "MS1",
+        "latitude": -27.467004,
+        "longitude": 153.025453,
+        "address": "Huakwang"
+      }*/
+    };
+
+    for(var i=0;i< messageObject.establishments.length; i++){
+      request()
+    }
+
+  });
+  /*
   .then(function(messageObject){
     console.log(messageObject);
 
