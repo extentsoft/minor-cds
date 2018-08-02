@@ -1,3 +1,7 @@
+# Progress as of Auguest 2, 2018
+
+![progress](http://progressed.io/bar/10?title=completed "progress")
+
 # Sprint 1
 
 | Interface | Design | DEV | UAT | Production | Live |

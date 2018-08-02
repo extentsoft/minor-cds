@@ -18,7 +18,7 @@ rvl__line2 varchar(255), \
 rvl__district varchar(255), \
 rvl__province varchar(255), \
 rvl__zipcode(10)
-tnd_
+tnd__id integer, \
 )
 
 
