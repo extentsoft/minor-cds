@@ -1,4 +1,4 @@
-# Progress as of Auguest 2, 2018
+# Activity and Progress as of Auguest 2, 2018
 
 ![progress](http://progressed.io/bar/10?title=completed "progress")
 

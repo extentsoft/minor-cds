@@ -1,7 +1,13 @@
-# Create Database
-$ db2 create db mpt
+# Approach
+```
+$ db2 create db mpt       # to creaet database "MPT"
+$ db2                     # to get db2 shell
+db2 => .....              # now we can put in db2 commands 
+```
 
-# Create Table
+# Mapping Table
+
+## _M_LOCATION
 ```
 $ db2 
 db2 => create table _m_location( \
@@ -17,11 +23,37 @@ rvl__line1 varchar(255), \
 rvl__line2 varchar(255), \
 rvl__district varchar(255), \
 rvl__province varchar(255), \
-rvl__zipcode(10)
+rvl__zipcode varchar(10), \
 tnd__id integer, \
 )
+```
 
+<table>
+  <tr>
+    <td colspan="13" align="center">Revel</td>
+    <td colspan="2" align="center">Tanda</td>
+  </tr>
+  <tr>
+    <td>rvl__id</td>
+    <td>rvl__name</td>
+    <td>rvl__site_number</td>
+    <td>rvl__location_email</td>
+    <td>rvl__email</td>
+    <td>rvl__address_id</td>
+    <td>rvl__latitude</td>
+    <td>rvl__longitude</td>
+    <td>rvl__line1</td>
+    <td>rvl__line2</td>
+    <td>rvl__district</td>
+    <td>rvl__province</td>
+    <td>rvl__zipcode</td>
+    <td>tnd__id</td>
+    <td>tnd__datastream_id</td>
+  </tr>
+</table>
 
+## _M_STORE_MANAGEMENT
+```
 db2 => create table _m_store_management( \
 establishment_id integer, \ 
 name varchar(100), \
@@ -37,39 +69,19 @@ province varchar(255), \
 zipcode(10))
 ```
 
-# Step
-1. sync all location 
-2. sync all team
-
-# Location
-1. get Establishment from revel into _m_location
-2. get Address from revel into _m_location
-3. get User[manager] from revel into _m_manager
-4. select compulsory fields from _m_location into TANDA[location]
-5. store location_id into _m_location
-
-# DataStream
-1. get site_number from _m_location
-2. select compulsory fields from _m_location into TANDA[datastream]
-3. store datastream_id into _m_location
-
-# Team
-1. get EmployeeRoleEstablishment into _m_store_management #establishment_id #role_id #user_id
-2. get Role and merge into _m_store_management
-3. select compulsory fields from _m_store_management into TANDA[team]
-4. store team_id into _m_store_management
-
-# DataStreamJoin
-1. select location_id,datastream_id from _m_location into TANDA[datastreamjoin]
-
-
-# User
-1. get User and merge into _m_store_management 
-2. select compulsory fields from _m_store_management into TANDA[user]
-3. store user_id into _m_store_management
-4. select user_id,department_id from _m_store_management update TANDA[user]
-5. select user_id,managed_department_id from _m_store_management update TANDA[user]
-
-
-# StoreStat
-1. get 
+## _M_STORE_CLOCKINOUT
+```
+db2 => create table _m_store_management( \
+establishment_id integer, \ 
+name varchar(100), \
+site_number varchar(50), \
+location_email varchar(100), \
+address_id integer, \
+latitude float, \
+longitude, \
+line1 varchar(255), \
+line2 varchar(255), \
+district varchar(255), \
+province varchar(255), \
+zipcode(10))
+```
