@@ -1,16 +1,18 @@
+# Location (Establishment)
+## Create New Location
+![xxx](https://www.lucidchart.com/publicSegments/view/7e335f0d-6f2a-4516-a710-92992d076ca0/image.png "xx")
 
-# Approach
-1. sync all location 
-2. sync all team
-3. nnn
-4. nnnn
+## Terminate Location
+![xxx](https://www.lucidchart.com/publicSegments/view/40bdee7b-5ca4-43f8-87e6-afb8b4317baa/image.png "xx")
 
-# Location
-1. get Establishment from revel into _m_location
-2. get Address from revel into _m_location
-3. get User[manager] from revel into _m_manager
-4. select compulsory fields from _m_location into TANDA[location]
-5. store location_id into _m_location
+# Team (Role)
+
+## Create New Role
+![xx](https://www.lucidchart.com/publicSegments/view/18c04c07-48cc-4230-b409-5a63a3beb16a/image.png "xx")
+
+## Update Role 
+![xx](https://www.lucidchart.com/publicSegments/view/31363817-9eba-41bd-814d-0018891c9887/image.png "xx")
+
 
 # DataStream
 1. get site_number from _m_location

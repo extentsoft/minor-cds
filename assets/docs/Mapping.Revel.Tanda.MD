@@ -9,6 +9,22 @@ db2 => .....              # now we can put in db2 commands
 
 ## M_LOCATION
 
+| Revel                | Tanda     |
+| -------------------- | --------- |
+| **rvl__id**          | **tnd_location_id** |
+| rvl__name            | tnd_datastream_id   |
+| rvl__site_number     |     |
+| rvl__location_email  |     |
+| rvl__email           |     |
+| rvl__address_id      |     |
+| rvl__latitude        |     |
+| rvl__longitude       |     |
+| rvl__line1           |     |
+| rvl__line2           |     |
+| rvl__district        |     |
+| rvl__province        |     |
+| rvl__zipcode         |     |
+
 ```
 create table dev.m_location( rvl__id int not null, rvl__name varchar(100), rvl__site_number varchar(50), rvl__location_email varchar(100), rvl__email varchar(100), rvl__address_id int, rvl__latitude float, rvl__longitude float, rvl__line1 varchar(255), rvl__line2 varchar(255), rvl__district varchar(255), rvl__province varchar(255), rvl__zipcode varchar(10), tnd__id int, tnd__datastream_id int, constraint pk_rvl_id primary key(rvl__id))
 ```
@@ -17,31 +33,24 @@ create table dev.m_location( rvl__id int not null, rvl__name varchar(100), rvl__
 create unique index ind_location_info on dev.m_location(rvl__id) include (rvl__name, rvl__site_number, tnd__id, tnd__datastream_id) 
 ```
 
-<table>
-  <tr>
-    <td colspan="13" align="center">Revel</td>
-    <td colspan="2" align="center">Tanda</td>
-  </tr>
-  <tr>
-    <td>rvl__id</td>
-    <td>rvl__name</td>
-    <td>rvl__site_number</td>
-    <td>rvl__location_email</td>
-    <td>rvl__email</td>
-    <td>rvl__address_id</td>
-    <td>rvl__latitude</td>
-    <td>rvl__longitude</td>
-    <td>rvl__line1</td>
-    <td>rvl__line2</td>
-    <td>rvl__district</td>
-    <td>rvl__province</td>
-    <td>rvl__zipcode</td>
-    <td>tnd__id</td>
-    <td>tnd__datastream_id</td>
-  </tr>
-</table>
-
 ## _M_STORE_MANAGEMENT
+
+| Revel                | Tanda     |
+| -------------------- | --------- |
+| **rvl__establish_id**          | **tnd_location_id** |
+| rvl__name            | tnd_datastream_id   |
+| rvl__site_number     |     |
+| rvl__location_email  |     |
+| rvl__email           |     |
+| rvl__address_id      |     |
+| rvl__latitude        |     |
+| rvl__longitude       |     |
+| rvl__line1           |     |
+| rvl__line2           |     |
+| rvl__district        |     |
+| rvl__province        |     |
+| rvl__zipcode         |     |
+
 ```
 db2 => create table _m_store_management(rvl__id int, name varchar(100), site_number varchar(50), location_email varchar(100), address_id int, latitude float, longitude float, line1 varchar(255), line2 varchar(255), district varchar(255), province varchar(255), zipcode varchar(10))
 ```
@@ -49,6 +58,7 @@ db2 => create table _m_store_management(rvl__id int, name varchar(100), site_num
 ```
 create unique index ind_locaiton_mgmt on dev.m_location(rvl__id) include (rvl__name, rvl__site_number, tnd__id, tnd__datastream_id) 
 ```
+
 
 
 ## _M_STORE_CLOCKINOUT
