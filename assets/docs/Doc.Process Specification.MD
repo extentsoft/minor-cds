@@ -13,11 +13,19 @@
 ## Update Role 
 ![xx](https://www.lucidchart.com/publicSegments/view/31363817-9eba-41bd-814d-0018891c9887/image.png "xx")
 
+# Employee
+## Create New Employee
+![xx](https://www.lucidchart.com/publicSegments/view/feeb8920-1626-4781-b3fe-538582b0e56d/image.png xx)
+
+## Update New Emploee
+![xx](https://www.lucidchart.com/publicSegments/view/458e5f4d-b830-48a3-b901-ba3d7656db5b/image.png "xx")
+
+
 
 # DataStream
-1. get site_number from _m_location
-2. select compulsory fields from _m_location into TANDA[datastream]
-3. store datastream_id into _m_location
+![xx](https://www.lucidchart.com/documents/edit/27428051-3782-4442-88ab-5c3eaeb72c9d/7 "XX")
+![xx](https://www.lucidchart.com/publicSegments/view/1037621f-1712-4d6d-9ccc-2b770993b72d/image.png "xx")
+
 
 # Team
 1. get EmployeeRoleEstablishment into _m_store_management #establishment_id #role_id #user_id
