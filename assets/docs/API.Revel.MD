@@ -33,3 +33,5 @@ https://minor-demo.revelup.com/apidoc/EmployeeRoleEstablishment/detail/
 ```
 https://minor-demo.revelup.com/apidoc/User/detail/
 ```
+
+# Report
