@@ -20,29 +20,16 @@
 ## Update New Emploee
 ![xx](https://www.lucidchart.com/publicSegments/view/458e5f4d-b830-48a3-b901-ba3d7656db5b/image.png "xx")
 
-
+## Create a Manager for each site
+????
 
 # DataStream
+
+## Sales Data
 ![xx](https://www.lucidchart.com/documents/edit/27428051-3782-4442-88ab-5c3eaeb72c9d/7 "XX")
+
+## Transaction Data
 ![xx](https://www.lucidchart.com/publicSegments/view/1037621f-1712-4d6d-9ccc-2b770993b72d/image.png "xx")
-
-
-# Team
-1. get EmployeeRoleEstablishment into _m_store_management #establishment_id #role_id #user_id
-2. get Role and merge into _m_store_management
-3. select compulsory fields from _m_store_management into TANDA[team]
-4. store team_id into _m_store_management
-
-# DataStreamJoin
-1. select location_id,datastream_id from _m_location into TANDA[datastreamjoin]
-
-
-# User
-1. get User and merge into _m_store_management 
-2. select compulsory fields from _m_store_management into TANDA[user]
-3. store user_id into _m_store_management
-4. select user_id,department_id from _m_store_management update TANDA[user]
-5. select user_id,managed_department_id from _m_store_management update TANDA[user]
 
 
 # StoreStat

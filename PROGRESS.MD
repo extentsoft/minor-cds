@@ -1,6 +1,6 @@
 # Activity and Progress as of Auguest 2, 2018
 
-![progress](http://progressed.io/bar/10?title=completed "progress")
+![progress](http://progressed.io/bar/64.7?title=completed "progress")
 
 # Sprint 1
 
@@ -26,22 +26,23 @@
 
 | Interface | Design | DEV | UAT | Production | Live |
 | --------- | ------ | --- | --- | ---------- | ---- |
-| Create Clockin                  | [?] | [ ] | [ ] | [ ] | [ ] |
-| Create Clockout                 | [?] | [ ] | [ ] | [ ] | [ ] |
-| Create Forecast                 | [x] | [ ] | [ ] | [ ] | [ ] |
-| Create Livesales                | [ ] | [ ] | [ ] | [ ] | [ ] |
-| Update team                     | [/] | [/] | [ ] | [ ] | [ ] |
-| Provide endpoint to SmartCareer | [ ] | [ ] | [ ] | [ ] | [ ] |
-| Create new User                 | [/] | [x] | [ ] | [ ] | [ ] |
-| Create file on FTP - mSchool    | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Create Clockin (1.5)               | [?] | [ ] | [ ] | [ ] | [ ] |
+| Create Clockout (1.5               | [?] | [ ] | [ ] | [ ] | [ ] |
+| Create Forecast (1)                | [x] | [ ] | [ ] | [ ] | [ ] |
+| Create Livesales (1.5)             | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Update team (1)                    | [/] | [/] | [ ] | [ ] | [ ] |
+| Provide endpoint to SmartCareer(1) | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Create new User (1)                | [/] | [x] | [ ] | [ ] | [ ] |
+| Create file on FTP - mSchool (1.5) | [ ] | [ ] | [ ] | [ ] | [ ] |
 | |
-| Create Location       | [/] | [/] | [?] | [ ] | [ ] |
-| Create Team           | [/] | [/] | [?] | [ ] | [ ] |
-| Create User           | [/] | [/] | [?] | [ ] | [ ] |
-| Create Datasteam      | [/] | [/] | [ ] | [ ] | [ ] |
-| Create Datajoin       | [/] | [/] | [ ] | [ ] | [ ] |
-| Create Manager        | [/] | [/] | [ ] | [ ] | [ ] |
-| Update user           | [/] | [/] | [ ] | [ ] | [ ] |
+| |
+| Create Location (1       | [/] | [/] | [?] | [ ] | [ ] |
+| Create Team (1)          | [/] | [/] | [?] | [ ] | [ ] |
+| Create User (1)          | [/] | [/] | [?] | [ ] | [ ] |
+| Create Datasteam (1)     | [/] | [/] | [ ] | [ ] | [ ] |
+| Create Datajoin (1)      | [/] | [/] | [ ] | [ ] | [ ] |
+| Create Manager (1)       | [/] | [/] | [ ] | [ ] | [ ] |
+| Update user (1)          | [/] | [/] | [ ] | [ ] | [ ] |
 
 
 
@@ -52,3 +53,22 @@
 | Tanda        | stagning.tanda.co          |
 | Smart Career | TBD |
 | mSchool      | TBD |
+
+
+# Counting Reference 
+Create Location (1)     
+Create Team (1)          
+Create User (1)          
+Create Datasteam (1)     
+Create Datajoin (1)      
+Create Manager (1)       
+Update user (1)          
+Create Clockin (1.5)  
+Create Clockout (1.5)
+Create Forecast (1)
+Create Livesales (1.5)
+Update team (1)       
+Provide endpoint to SmartCareer(1) 
+Create new User (1)                
+Create file on FTP - mSchool (1.5) 
+= 11/17 = 64.7
