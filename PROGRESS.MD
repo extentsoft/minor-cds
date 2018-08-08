@@ -10,7 +10,7 @@
 | Create Team           | [/] | [/] | [ ] | [ ] | [ ] |
 | Create User           | [/] | [/] | [ ] | [ ] | [ ] |
 | Create Datasteam      | [/] | [/] | [ ] | [ ] | [ ] |
-| Create Datajoin       | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Create Datajoin       | [/] | [/] | [ ] | [ ] | [ ] |
 | Create Manager        | [/] | [/] | [ ] | [ ] | [ ] |
 | Update user           | [/] | [/] | [ ] | [ ] | [ ] |
 
@@ -26,23 +26,22 @@
 
 | Interface | Design | DEV | UAT | Production | Live |
 | --------- | ------ | --- | --- | ---------- | ---- |
-| Create Clockin (1.5)               | [?] | [ ] | [ ] | [ ] | [ ] |
-| Create Clockout (1.5               | [?] | [ ] | [ ] | [ ] | [ ] |
+| Create Clockin (1.5)               | [/] | [P] | [ ] | [ ] | [ ] |
+| Create Clockout (1.5               | [/] | [P] | [ ] | [ ] | [ ] |
 | Create Forecast (1)                | [x] | [ ] | [ ] | [ ] | [ ] |
-| Create Livesales (1.5)             | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Create Livesales (1.5)             | [P] | [ ] | [ ] | [ ] | [ ] |
 | Update team (1)                    | [/] | [/] | [ ] | [ ] | [ ] |
-| Provide endpoint to SmartCareer(1) | [ ] | [ ] | [ ] | [ ] | [ ] |
-| Create new User (1)                | [/] | [x] | [ ] | [ ] | [ ] |
-| Create file on FTP - mSchool (1.5) | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Provide endpoint to SmartCareer(1) | [x] | [ ] | [ ] | [ ] | [ ] |
+| Create file on FTP - mSchool (1.5) | [x] | [ ] | [ ] | [ ] | [ ] |
 | |
 | |
 | Create Location (1       | [/] | [/] | [?] | [ ] | [ ] |
 | Create Team (1)          | [/] | [/] | [?] | [ ] | [ ] |
 | Create User (1)          | [/] | [/] | [?] | [ ] | [ ] |
-| Create Datasteam (1)     | [/] | [/] | [ ] | [ ] | [ ] |
-| Create Datajoin (1)      | [/] | [/] | [ ] | [ ] | [ ] |
-| Create Manager (1)       | [/] | [/] | [ ] | [ ] | [ ] |
-| Update user (1)          | [/] | [/] | [ ] | [ ] | [ ] |
+| Create Datasteam (1)     | [/] | [/] | [?] | [ ] | [ ] |
+| Create Datajoin (1)      | [/] | [/] | [?] | [ ] | [ ] |
+| Create Manager (1)       | [/] | [/] | [?] | [ ] | [ ] |
+| Update user (1)          | [/] | [/] | [?] | [ ] | [ ] |
 
 
 
