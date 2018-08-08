@@ -1,4 +1,4 @@
-# Activity and Progress as of Auguest 2, 2018
+# Activity and Progress as of Auguest 8, 2018
 
 ![Development Progress](http://progressed.io/bar/64?title=development "Development Progress")
 ![Delivery Progress](http://progressed.io/bar/0?title=delivery "Delivery Progress")
