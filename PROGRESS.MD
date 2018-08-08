@@ -1,6 +1,7 @@
 # Activity and Progress as of Auguest 2, 2018
 
-![progress](http://progressed.io/bar/64?title=completed "progress")
+![Development Progress](http://progressed.io/bar/64?title=development "Development Progress")
+![Delivery Progress](http://progressed.io/bar/0?title=delivery "Delivery Progress")
 
 # Sprint 1
 
