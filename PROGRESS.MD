@@ -1,6 +1,6 @@
 # Activity and Progress as of Auguest 2, 2018
 
-![progress](http://progressed.io/bar/64.7?title=completed "progress")
+![progress](http://progressed.io/bar/64?title=completed "progress")
 
 # Sprint 1
 
