@@ -33,5 +33,10 @@ GET https://my.tanda.co/api/v2/departments/111
 ex. "sales-store1", "sales-store2"
 ```
 
+## Clock in
+> https://minor-demo.revelup.com/resources/TimeSheetEntry/?format=json&establishment=1&created_date__range=2013-03-07T12:00:00,2013-03-08T12:00:00
 
+> https://minor-demo.revelup.com/resources/TimeSheetEntry/?format=json&establishment=1&created_date__range=2013-03-07T12:00:00,2013-03-08T12:00:00&employee=12
+
+## Clock out
 

@@ -1,36 +1,65 @@
 # Location (Establishment)
 ## Create New Location
-![xxx](https://www.lucidchart.com/publicSegments/view/7e335f0d-6f2a-4516-a710-92992d076ca0/image.png "xx")
+![Create Location](https://www.lucidchart.com/publicSegments/view/a38d5d17-d5bf-4350-936e-107eed9c50ea/image.png "Create Location")
 
-## Terminate Location
-![xxx](https://www.lucidchart.com/publicSegments/view/40bdee7b-5ca4-43f8-87e6-afb8b4317baa/image.png "xx")
+## Update Location
+![Update Location](https://www.lucidchart.com/publicSegments/view/bc824d85-18bf-4140-801c-a0961adc984e/image.png "Update Location")
 
 # Team (Role)
-
 ## Create New Role
-![xx](https://www.lucidchart.com/publicSegments/view/18c04c07-48cc-4230-b409-5a63a3beb16a/image.png "xx")
+![Create Role](https://www.lucidchart.com/publicSegments/view/029b3350-1115-4040-af2f-0e5530620061/image.png "Create Role")
 
 ## Update Role 
-![xx](https://www.lucidchart.com/publicSegments/view/31363817-9eba-41bd-814d-0018891c9887/image.png "xx")
+![Update Role](https://www.lucidchart.com/publicSegments/view/3b745ca4-9836-4ed4-9a64-20541dc2c215/image.png "Update Role")
 
 # Employee
 ## Create New Employee
-![xx](https://www.lucidchart.com/publicSegments/view/feeb8920-1626-4781-b3fe-538582b0e56d/image.png xx)
+![Create Employee](https://www.lucidchart.com/publicSegments/view/51a417f7-0941-4b65-9bd0-ecca6f827618/image.png "Create Employee")
 
 ## Update New Emploee
-![xx](https://www.lucidchart.com/publicSegments/view/458e5f4d-b830-48a3-b901-ba3d7656db5b/image.png "xx")
+![Update Employee](https://www.lucidchart.com/publicSegments/view/41e0ae99-7832-4a80-9a6a-6725e68771db/image.png "Update Employee")
 
 ## Create a Manager for each site
-????
+??
 
 # DataStream
 
 ## Sales Data
-![xx](https://www.lucidchart.com/documents/edit/27428051-3782-4442-88ab-5c3eaeb72c9d/7 "XX")
+![Create DS-Sales](https://www.lucidchart.com/publicSegments/view/246f3bdd-f88f-46f4-92fc-b5deaee62bf7/image.png "Create DS-Sales")
 
 ## Transaction Data
-![xx](https://www.lucidchart.com/publicSegments/view/1037621f-1712-4d6d-9ccc-2b770993b72d/image.png "xx")
+![Create DS-Transaction](https://www.lucidchart.com/publicSegments/view/78b51b26-8303-4fa8-b65c-4b85e9dcd187/image.png "Create DS-Transaction")
 
+## Join Sales Data to Organization
+![Create DSJ-Sales](https://www.lucidchart.com/publicSegments/view/97044854-f38c-4874-8970-ec2fb663b183/image.png "Create DSJ-Sales")
+
+## Join Transaction Data to Organization
+![Create DSJ-Transaction](https://www.lucidchart.com/publicSegments/view/54fd561f-17d5-4b1a-9d54-23eeaaab32e7/image.png "Create DSJ-Transaction")
 
 # StoreStat
-1. get 
+
+## Submit Sales Data
+![Submit Stat-Sales](https://www.lucidchart.com/publicSegments/view/4ea4a62f-3018-4362-aa7e-e7760065a336/image.png "Submit Stat-Sales")
+
+## Submit Transaction Data
+![Submit Stat-Transactions](https://www.lucidchart.com/publicSegments/view/4cd26b07-0b72-4a91-b4e0-93931c3d8c8f/image.png "Submit Stat-Transactions")
+
+# Worklog
+## Clock in
+![Clock in](https://www.lucidchart.com/publicSegments/view/18a95992-efd5-4fcf-bbe4-8134b079bc1c/image.png "Clock in")
+
+## Clock out
+![Clock out](https://www.lucidchart.com/publicSegments/view/69831f0b-58b6-422e-a81a-1676d47e9ae0/image.png "Clock out")
+
+
+
+
+
+
+
+
+
+
+
+
+
