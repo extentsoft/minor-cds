@@ -22,8 +22,6 @@
 ## Update New Emploee
 ![Update Employee](https://www.lucidchart.com/publicSegments/view/41e0ae99-7832-4a80-9a6a-6725e68771db/image.png "Update Employee")
 
-## Create a Manager for each site
-??
 
 # DataStream
 
