@@ -7,7 +7,7 @@
 
 # Team (Role)
 ## Create New Role
-![Create Role](https://www.lucidchart.com/publicSegments/view/029b3350-1115-4040-af2f-0e5530620061/image.png "Create Role")
+![Create Role](https://www.lucidchart.com/publicSegments/view/4e2c013f-453b-44cb-96d8-2016800535ad/image.png "Create Role")
 
 ## Update Role 
 ![Update Role](https://www.lucidchart.com/publicSegments/view/3b745ca4-9836-4ed4-9a64-20541dc2c215/image.png "Update Role")
@@ -15,6 +15,9 @@
 # Employee
 ## Create New Employee
 ![Create Employee](https://www.lucidchart.com/publicSegments/view/51a417f7-0941-4b65-9bd0-ecca6f827618/image.png "Create Employee")
+
+## Create New Manager
+![Create Manager](https://www.lucidchart.com/publicSegments/view/8d208c32-662d-450e-bd30-113e7bd182db/image.png "Create Manager")
 
 ## Update New Emploee
 ![Update Employee](https://www.lucidchart.com/publicSegments/view/41e0ae99-7832-4a80-9a6a-6725e68771db/image.png "Update Employee")

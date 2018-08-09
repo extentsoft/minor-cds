@@ -233,27 +233,65 @@ fn_revel_get__locations({})
   .then(function(messageObject){ // select location    
     _establishments = messageObject.establishments.objects;
     messageObject["establishments"] = _establishments
-    console.log(messageObject);
+    //console.log(messageObject);
+    /* select 13 for demo
+    for(var i=0; i< messageObject["establishments"].length; i++){
+      if( messageObject["establishments"][i].id == 13 ){
+        console.log(messageObject["establishments"][i]);
+        return {"establishments" : [messageObject["establishments"][i] ]};
+      }
+    }*/
     return messageObject;
   })
   .then(function(messageObject){
+    console.log(messageObject);
+    console.log();
+    return new Promise(function(resolve,reject){
+      request(
+        {
+          url: 'https://minor-demo.revelup.com/resources/Address/?format=json',
+          headers: revel_haeders
+        }, function(error, response, body)
+        {
+          if (!error && response.statusCode == 200) {        
+            var info = JSON.parse(body);         
+            //params["address"] = info;
+            console.log('-- address --');
+            console.log(info.objects);
+            let  addr_object = {};
+
+            addr_object["address"] = info.objects;
+            resolve({old:messageObject ,new: addr_object});
+          }
+          else{
+            reject(new Error());
+          }
+        }
+      );
+    });
+    
+  })
+  .then(function(messageObject){
+    console.log(messageObject);
      var tmpl_post__location = {
       url: 'https://my.tanda.co/api/v2/locations',
       method: 'POST',
       headers: tanda_headers,
-      /*body: {
-        "name": "Metro Site #1",
-        "short_name": "MS1",
+      body: {
+        "name": "Springfield",
+        "short_name": "S",
         "latitude": -27.467004,
         "longitude": 153.025453,
-        "address": "Huakwang"
-      }*/
+        "address": "Springfield Powerplant Logistics Centre"        
+      }
+      
+      
     };
-
+/*
     for(var i=0;i< messageObject.establishments.length; i++){
       request()
     }
-
+*/
   });
   /*
   .then(function(messageObject){
