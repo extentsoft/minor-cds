@@ -1,6 +1,6 @@
 # Location (Establishment)
 ## Create New Location
-![Create Location](https://www.lucidchart.com/publicSegments/view/a38d5d17-d5bf-4350-936e-107eed9c50ea/image.png "Create Location")
+![Create Location](https://www.lucidchart.com/publicSegments/view/719e4cd8-db7a-4e56-ab0b-7db57f5b1d56/image.png "Create Location")
 
 ## Update Location
 ![Update Location](https://www.lucidchart.com/publicSegments/view/bc824d85-18bf-4140-801c-a0961adc984e/image.png "Update Location")
