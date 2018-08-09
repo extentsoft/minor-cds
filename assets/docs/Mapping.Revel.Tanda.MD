@@ -31,23 +31,20 @@
 
 ## M_STORE_STAT (Revenue, Transaction)
 
-| Revel                | 
-| -------------------- | 
-| loc_id          | 
-| ds_id            | 
-| join_id            | 
-| type            | 
-| stat            | 
-| currentdate         | 
-| f_status         | 
+| Revel                | Tanda     |
+| -------------------- | --------- | 
+| loc_id          |  ds_id  |
+| stat            | join_id  |
+| currentdate            |  type |
+| f_status            |   |
 
 
 ## M_WORKLOG (Clock in/out)
 
-| Revel                | 
-| -------------------- | 
-| loc_id          | 
-| emp_id            | 
+| Revel                |  Tanda     |
+| -------------------- |  --------- | 
+| est_id          | loc_id |
+| emp_id            | staff_id |
 | clockin            | 
 | clockout            | 
 | previousdate         | 
