@@ -37,5 +37,6 @@
 | mSchool      | TBD |
 
 
-# Issue
-1. Align current date for live report and worklog
+# Issue Report
+1. Aligned current time not working properly for live report and worklog due to Revel's simple string format
+2. Data inconsistency from Revel causes some failure i.e. address duplication
