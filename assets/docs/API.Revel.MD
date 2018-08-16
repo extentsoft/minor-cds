@@ -14,6 +14,11 @@ site: 13| PZ-5555 Avani Test 1
 site: 14| PZ-6666 Avani Test 2
 ```
 
+```
+curl -X GET --header "API-AUTHENTICATION: e70010c670c34ed1be518fcc81c52794:7339f22109fa4f5bab65c4221df3f05bbcbe1cf562914c329d11dd2d21342195" https://minor-demo.revelup.com/enterprise/Establishment/?format=json
+```
+
+
 # API
 Clock in/out: 
 > https://minor-demo.revelup.com/apidoc/TimeSheetEntry/detail/
@@ -76,4 +81,9 @@ User:
 > https://minor-demo.revelup.com/resources/TimeSheetEntry/?format=json
 > https://minor-demo.revelup.com/resources/TimeSheetEntry/?format=json&establishment=1&employee=2&created_date
 > https://minor-demo.revelup.com/resources/TimeSheetEntry/?format=json&establishment=1
-> 
+
+
+
+
+# Rostering
+

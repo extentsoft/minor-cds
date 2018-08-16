@@ -1,7 +1,10 @@
 # Introduction
 
-![alt text][solution_overview]
+![Solution Overview][solution_overview]
 Some introductory information
+
+![Store Overview](https://www.lucidchart.com/publicSegments/view/e1391c4a-f9fe-4374-a876-0c9352342e06/image.png "Store Overview")
+
 
 # Integration Overview
 ## FSR Transformation (No Delivery) #phase-1

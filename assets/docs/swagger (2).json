@@ -1,0 +1,43 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2.0",
+    "title": "Revel API",
+    "description": ""
+  },
+  "host": "minor-demo.revelup.com",
+  "basePath": "/",
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/enterprise/Establishment": {
+      "get": {
+        "tags": [
+          "info"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "meta": {
+                  "type": "object"
+                },
+                "objects": {
+                  "type": "array",
+                  "items": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
