@@ -38,5 +38,5 @@
 
 
 # Issue Report
-1. Aligned current time not working properly for live report and worklog due to Revel's simple string format
+1. Aligned current time not working properly for live report and worklog due to Revel's date string format
 2. Data inconsistency from Revel causes some failure i.e. address duplication
