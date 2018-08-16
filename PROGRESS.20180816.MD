@@ -21,10 +21,10 @@
 | Create file on FTP - mSchool    | [x] | [ ] | [ ] | [ ] | [ ] |
 | Create file on FTP - mSchool    | [x] | [ ] | [ ] | [ ] | [ ] |
 
-[/] - Done
-[B] - Bug Fixed
-[P] - In Progress
-[x] - Exclude from the backlog
+> [/] - Done
+> [B] - Bug Fixed
+> [P] - In Progress
+> [x] - Exclude from the backlog
 
 | Interface    | Environment                |
 | -----------  | -------------------------- |
