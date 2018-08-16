@@ -1,7 +1,7 @@
-# Activity and Progress as of Auguest 8, 2018
+# Activity and Progress as of Auguest 16, 2018
 
-![Development Progress](http://progressed.io/bar/64?title=development "Development Progress")
-![Delivery Progress](http://progressed.io/bar/0?title=delivery "Delivery Progress")
+![Development Progress](http://progressed.io/bar/85?title=development "Development Progress")
+![Delivery Progress](http://progressed.io/bar/20?title=delivery "Delivery Progress")
 
 | Interface | Design | DEV | UAT | Production | Live |
 | --------- | ------ | --- | --- | ---------- | ---- |
@@ -14,10 +14,10 @@
 | Update user            | [/] | [/] | [P] | [ ] | [ ] |
 | Create Clockin                | [/] | [B] | [P] | [ ] | [ ] |
 | Create Clockout               | [/] | [B] | [P] | [ ] | [ ] |
-| Create Forecast               | [x] | [ ] | [ ] | [ ] | [ ] |
 | Create Livesales              | [/] | [B] | [P] | [ ] | [ ] |
 | Update team                   | [/] | [/] | [P] | [ ] | [ ] |
-| Provide endpoint to SmartCareer | [P] | [ ] | [ ] | [ ] | [ ] |
+| Provide endpoint to SmartCareer | [x] | [ ] | [ ] | [ ] | [ ] |
+| Create Forecast                 | [x] | [ ] | [ ] | [ ] | [ ] |
 | Create file on FTP - mSchool    | [x] | [ ] | [ ] | [ ] | [ ] |
 | Create file on FTP - mSchool    | [x] | [ ] | [ ] | [ ] | [ ] |
 
