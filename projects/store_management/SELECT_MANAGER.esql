@@ -1,0 +1,93 @@
+CREATE COMPUTE MODULE SELECT_MANAGER
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE selectSql CHARACTER;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.TMP_LOCATION AS R;
+		
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select  R.name_role,L.location_id from Database.TMP_ROLE AS R,Database.M_LOCATION AS L where (R.establishment = L.resource_uri_est and L.location_id is not null) and (R.name_role  not in (select M.name from Database.M_ROLE AS M) and L.location_id  not in (select M.location_id from Database.M_ROLE AS M));
+		
+		-- SET OutputRoot.JSON.Data.ResultSet[] = PASSTHRU ('select  R.email,R.employee_start,R.first_name,R.last_name,R.phone_number,R.resource_uri_emp,L.id from TMP_ROLE AS R,M_ROLE AS L where (R.resource_uri_role = L.resource_uri_role and R.establishment = L.resource_uri_est and L.id is not null) and (R.resource_uri_emp  not in (select MR.resource_uri from M_EMPLOYEE AS MR) and L.id  not in (select MM.id_department from M_EMPLOYEE AS MM)) group by R.email,R.employee_start,R.first_name,R.last_name,R.phone_number,R.resource_uri_emp,L.id');
+		SET OutputRoot.JSON.Data.ResultSet[] = PASSTHRU ('select a.name,a.email,a.resource_uri_est,SUBSTR(xmlserialize(xmlagg(xmltext(CONCAT( '', '',b.id))) as VARCHAR(1024)), 3) AS "department_id" from m_location a,m_role b where (a.location_id = b.location_id) and (a.resource_uri_est not in (select resource_uri_est from m_manager)) and a.active_adr = ''1'' and a.active_est = ''1'' and b.active = ''1'' group by a.name,a.email,a.resource_uri_est');
+
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		
+		DECLARE i INTEGER 1;
+		
+		FOR source AS OutputRoot.JSON.Data.ResultSet[] DO
+		insert
+		into Database.M_MANAGER
+		(
+			id_department,
+		email,
+		name,
+		resource_uri_est
+		)
+		VALUES
+		(
+			source.department_id,
+			source.EMAIL,
+			source.NAME,
+			source.RESOURCE_URI_EST);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		
+		
+		SET OutputRoot.JSON.Data.UpdateID[] = select B.* from Database.T_USER AS B,Database.M_MANAGER AS A where B.name = A.name and B.email = A.email;
+
+		FOR source AS OutputRoot.JSON.Data.UpdateID[] DO
+			
+		UPDATE Database.M_MANAGER AS A
+		
+ 		SET id = source.ID,
+ 			flag = '0'
+ 		where A.name = source.NAME and A.email = source.EMAIL;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+		
+		
+		SET OutputRoot.JSON.Data.UpdateManager[] = select A.* from Database.T_USER AS B,Database.M_MANAGER AS A where (B.id = A.id and A.id is not null) and (B.name <> A.name or B.email <> A.email);
+
+		FOR source AS OutputRoot.JSON.Data.UpdateManager[] DO
+			
+		UPDATE Database.M_MANAGER AS A
+		
+ 		SET flag = '2'
+ 		where A.id = source.ID;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+
+		-- SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.TMP_LOCATION AS R
+
+		
+		
+		SET OutputRoot.JSON.Data.Update[] = select A.name,A.id,A.email from Database.M_MANAGER AS A where A.flag = '2';
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

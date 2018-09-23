@@ -1,0 +1,126 @@
+CREATE COMPUTE MODULE SELECT_EMPLOYEE
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE mySharedRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.TMP_LOCATION AS R;
+		
+		DELETE FROM Database.M_EMPLOYEE AS D WHERE D.id is null;
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;	
+		
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select  R.name_role,L.location_id from Database.TMP_ROLE AS R,Database.M_LOCATION AS L where (R.establishment = L.resource_uri_est and L.location_id is not null) and (R.name_role  not in (select M.name from Database.M_ROLE AS M) and L.location_id  not in (select M.location_id from Database.M_ROLE AS M));
+		
+		SET OutputRoot.JSON.Data.ResultSet[] = PASSTHRU ('select  R.email,R.employee_start,R.first_name,R.last_name,R.external_id,R.internal_id,R.phone_number,R.employee,SUBSTR(xmlserialize(xmlagg(xmltext(CONCAT( '', '',L.id))) as VARCHAR(1024)), 3) AS "id" from TMP_ROLE AS R,M_ROLE AS L where (R.resource_uri_role = L.resource_uri_role and R.establishment = L.resource_uri_est and L.id is not null) and (R.employee  not in (select MR.resource_uri from M_EMPLOYEE AS MR)) group by R.email,R.employee_start,R.first_name,R.last_name,R.phone_number,R.employee,R.external_id,R.internal_id');
+		
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		
+		DECLARE i INTEGER 1;
+		
+		FOR source AS OutputRoot.JSON.Data.ResultSet[] DO
+		insert
+		into Database.M_EMPLOYEE
+		(
+			id_department,
+		email,
+		employee_start,
+		first_name,
+		last_name,
+		phone_number,
+		external_id,
+		internal_id,
+		resource_uri
+		)
+		VALUES
+		(
+			source.id,
+			source.EMAIL,
+			source.EMPLOYEE_START,
+			source.FIRST_NAME,
+			source.LAST_NAME,
+			source.PHONE_NUMBER,
+			source.EXTERNAL_ID,
+			source.INTERNAL_ID,
+			source.EMPLOYEE);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		
+		
+		SET OutputRoot.JSON.Data.UpdateID[] = select B.* from Database.T_USER AS B;
+
+		FOR source AS OutputRoot.JSON.Data.UpdateID[] DO
+			
+		UPDATE Database.M_EMPLOYEE AS A
+		
+ 		SET id = source.ID,
+ 			flag = '0'
+ 		where A.internal_id = source.INTERNAL_ID;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		UPDATE Database.M_EMPLOYEE AS A
+		
+ 		SET id = source.ID,
+ 			flag = '0'
+ 		where (A.first_name||' '||A.last_name) = source.NAME;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		 		
+ 		END FOR; 		
+ 		
+ 		
+ 		UPDATE Database.M_EMPLOYEE AS A
+ 		SET flag = '0'
+ 		where A.email is null or A.email = '' or A.internal_id is null or A.internal_id = '';
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		SET OutputRoot.JSON.Data.UpdateEmp[] = select A.* from Database.T_USER AS B,Database.M_EMPLOYEE AS A where (B.id = A.id and A.id is not null) and (B.name <> (A.first_name||' '||A.last_name) or B.email <> A.email or B.phone_number <> A.phone_number or B.internal_id <> A.internal_id);
+
+		FOR source AS OutputRoot.JSON.Data.UpdateEmp[] DO
+			
+		UPDATE Database.M_EMPLOYEE AS A
+		
+ 		SET flag = '2'
+ 		where A.id = source.ID;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+		
+		
+		
+		SET OutputRoot.JSON.Data.Update[] = select A.first_name,A.last_name,A.id,A.email,A.phone_number,A.internal_id from Database.M_EMPLOYEE AS A where A.flag = '2';
+		-- SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.TMP_LOCATION AS R
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

@@ -1,0 +1,126 @@
+CREATE COMPUTE MODULE SELECT_ROLE
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE mySharedRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.TMP_LOCATION AS R;
+		-- DELETE FROM Database.M_ROLE AS D;
+		-- SET SQLCode1 = SQLCODE;
+		-- SET SQLErrorText1 = SQLERRORTEXT;
+					
+		-- COMMIT;	
+		
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select  R.name_role,L.location_id from Database.TMP_ROLE AS R,Database.M_LOCATION AS L where (R.establishment = L.resource_uri_est and L.location_id is not null) and (R.name_role  not in (select M.name from Database.M_ROLE AS M) and L.location_id  not in (select M.location_id from Database.M_ROLE AS M));
+		
+		SET OutputRoot.JSON.Data.ResultSet[] = PASSTHRU ('select  R.active_role,R.name_role,L.location_id,R.resource_uri_role,R.establishment from TMP_ROLE AS R,M_LOCATION AS L where (R.establishment = L.resource_uri_est and L.location_id is not null) and (R.resource_uri_role not in (select resource_uri_role from m_role) and R.establishment not in (select resource_uri_est from m_role)) and R.active = ''1'' and R.active_role = ''1''  group by R.active_role,R.name_role,L.location_id,R.resource_uri_role,R.establishment');
+		
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		
+		DECLARE i INTEGER 1;
+		
+		
+		FOR source AS OutputRoot.JSON.Data.ResultSet[] DO
+		insert
+		into Database.M_ROLE
+		(	
+			active,
+			name,
+			location_id,
+			export_name,
+			resource_uri_role,
+			resource_uri_est)
+		VALUES
+		(
+			source.ACTIVE_ROLE,
+			source.NAME_ROLE,
+			source.LOCATION_ID,
+			source.NAME_ROLE,
+			source.RESOURCE_URI_ROLE,
+			source.ESTABLISHMENT);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		
+		SET OutputRoot.JSON.Data.ReconTemp[] = select A.* from Database.TMP_ROLE AS A;
+
+		FOR source AS OutputRoot.JSON.Data.ReconTemp[] DO
+			
+		UPDATE Database.M_ROLE AS A
+		
+ 		SET name = source.NAME_ROLE
+ 		where A.resource_uri_est = source.ESTABLISHMENT and A.resource_uri_role = source.RESOURCE_URI_ROLE;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+ 		
+ 		UPDATE Database.M_ROLE AS A
+		
+ 		SET flag = '1'; 			
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+		
+		SET OutputRoot.JSON.Data.UpdateID[] = select * from Database.T_DEPARTMENT;
+
+		FOR source AS OutputRoot.JSON.Data.UpdateID[] DO
+			
+		UPDATE Database.M_ROLE AS A
+		
+ 		SET id = source.ID,
+ 			flag = '0'
+ 		where A.name = source.NAME and A.location_id = source.LOCATION_ID;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+ 		
+ 		 		
+ 		SET OutputRoot.JSON.Data.UpdateRol[] = select A.* from Database.T_DEPARTMENT AS B,Database.M_ROLE AS A where (B.id = A.id) and (B.name <> A.name);
+
+		FOR source AS OutputRoot.JSON.Data.UpdateRol[] DO
+			
+		UPDATE Database.M_ROLE AS A
+		
+ 		SET flag = '2'
+ 		where A.id = source.ID;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+		
+
+		DELETE FIELD OutputRoot.JSON.Data.ReconTemp;
+
+		SET OutputRoot.JSON.Data.Update[] = select A.name,A.id from Database.M_ROLE AS A where A.flag = '2';
+		-- SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.TMP_LOCATION AS R
+		
+
+		
+		RETURN TRUE;
+		
+	END;
+
+
+END MODULE;
