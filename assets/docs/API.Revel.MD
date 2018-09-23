@@ -15,7 +15,7 @@ site: 14| PZ-6666 Avani Test 2
 ```
 
 ```
-curl -X GET --header "API-AUTHENTICATION: e70010c670c34ed1be518fcc81c52794:7339f22109fa4f5bab65c4221df3f05bbcbe1cf562914c329d11dd2d21342195" https://minor-demo.revelup.com/enterprise/Establishment/?format=json
+curl -X GET --header "API-AUTHENTICATION: e70010c670c34ed1be518fcc81c52794:7339f22109fa4f5bab65c4221df3f05bbcbe1cf562914c329d11dd2d21342195" https://minor-demo.revelup.com/enterprise/Establishment/?id=15format=json
 ```
 
 

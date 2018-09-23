@@ -1,0 +1,209 @@
+swagger: "2.0"
+info:
+  title: "Tanda API"
+  description: "API description in Markdown."
+  version: "1.0.0"
+host: staging.tanda.co
+basePath: /api/v2
+schemes:
+- "https"
+paths:
+  /locations:
+    get:
+      summary: 'Get Locations'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: "CreateLocation"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a location"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /users:
+    post:
+      operationId: "CreateUser"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a user"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /departments:
+    post:
+      operationId: "CreateDepartment"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a department"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /datastreams:
+    post:
+      operationId: "CreateDataStream"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a datastream"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /datastreamjoins:
+    post:
+      operationId: "CreateDataStreamJoin"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a datastreamjoin"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /storestats/for_datastream:
+    post:
+      operationId: "CreateStorestatistics"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Submit Store Statistics"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - in: path
+        name: id
+        type: number
+        description: The datastream_id for being a container.
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /clockins:
+    post:
+      operationId: "ClockInOut"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Submit Clock in/out"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+  /schedules:
+    get:
+      summary: ''
+      description: ''
+      consumes: 
+        - application/json
+      produces: 
+        - application/json
+      parameters: 
+        - in: query
+          name: users_ids
+          type: integer
+          description: 'User ID'
+        - in: query
+          name: from
+          type: string
+          description: ''
+        - in: query
+          name: to
+          type: string
+          description: ''
+      responses:
+        200:
+          description: OK
+          

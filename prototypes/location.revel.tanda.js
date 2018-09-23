@@ -233,14 +233,11 @@ fn_revel_get__locations({})
   .then(function(messageObject){ // select location    
     _establishments = messageObject.establishments.objects;
     messageObject["establishments"] = _establishments
-    //console.log(messageObject);
-    /* select 13 for demo
+    console.log(messageObject);
+    
     for(var i=0; i< messageObject["establishments"].length; i++){
-      if( messageObject["establishments"][i].id == 13 ){
-        console.log(messageObject["establishments"][i]);
-        return {"establishments" : [messageObject["establishments"][i] ]};
-      }
-    }*/
+      return {"establishments" : [messageObject["establishments"][i] ]};
+    }
     return messageObject;
   })
   .then(function(messageObject){

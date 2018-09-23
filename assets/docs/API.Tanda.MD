@@ -30,9 +30,9 @@ curl -k --request POST  --url https://minor-demo.revelup.com/resources/TimeSched
 
 
 # 3333
-curl -k --url https://staging.tanda.co/api/v2/datastreams   --header 'accept: application/json'   --header 'content-type: application/json'   --header 'Authorization: bearer 979d2ef336bf3c2fa7163f99046cd7cb9c3912ce9115abac4c3b44b6d890ae1d'
+curl -k --url https://staging.tanda.co/api/v2/datastreams/115178   --header 'accept: application/json'   --header 'content-type: application/json'   --header 'Authorization: bearer 979d2ef336bf3c2fa7163f99046cd7cb9c3912ce9115abac4c3b44b6d890ae1d'
 
-curl -k --request DELETE --url https://my.tanda.co/api/v2/datastreams/115178  --header 'accept: application/json'   --header 'content-type: application/json'   --header 'Authorization: bearer 11186091004ca29ca5cb063fdb6a6bfe458759749269d6a6bd8c5ceef1c02324' 
+curl -k --request DELETE --url https://staging.tanda.co/api/v2/datastreams/115202  --header 'accept: application/json'   --header 'content-type: application/json'   --header 'Authorization: bearer 979d2ef336bf3c2fa7163f99046cd7cb9c3912ce9115abac4c3b44b6d890ae1d' 
 
 # 333
 
@@ -178,6 +178,9 @@ GET https://my.tanda.co/api/v2/datastreams
   }
 ]
 
+curl -k --request POST --url https://staging.tanda.co/api/v2/datastreams --header 'accept: application/json'   --header 'content-type: application/json'   --header 'Authorization: bearer 68ac9af521950d5e3cd6f9581c2efe55f95493ffbae780ec5ab28fcb43d5d337' --data '{"name": "staging_68922_ds","data_interval":900}'
+
+
 POST https://my.tanda.co/api/v2/datastreams
 -->
 {
@@ -224,3 +227,7 @@ POST https://my.tanda.co/api/v2/datastreamjoins
 
 
 select * from Database.MINORDB.db2inst1.M_STORESTAT where dsp_type = '';
+
+
+
+curl -k --request POST  --url https://minor-demo.revelup.com/resources/TimeSchedule/?format=json --header 'accept: application/json'   --header 'content-type: application/json'   --header 'API-AUTHENTICATION: e70010c670c34ed1be518fcc81c52794:7339f22109fa4f5bab65c4221df3f05bbcbe1cf562914c329d11dd2d21342195'   --data '{"updated_date":"TPC_sales","updated_by":"", "shift_end_time"}'
