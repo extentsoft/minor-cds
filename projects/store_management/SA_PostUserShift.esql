@@ -1,0 +1,151 @@
+
+
+CREATE COMPUTE MODULE SA_PostUserShift
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		-- SET OutputLocalEnvironment.Destination.File.Directory = 'C:\IIB';
+		-- SET OutputLocalEnvironment.Destination.File.Name = 'master.progress.log';
+		DECLARE mystr, current_epoch, starttime, endtime CHARACTER;
+		DECLARE CR CHAR CAST(CAST('X''0A''' AS BLOB) AS CHAR CCSID 874); 
+		-- SET mystr = 'NA,SSN,NA,StoreID(SiteID),NA, JobID, PunchTypeNum, Date, Date, Year, Month, ClockIn, ClockOut, Effort, Source' || CR;
+		
+		DECLARE i, count INTEGER;
+		SET i = 1;
+		SET count = CARDINALITY(InputRoot.JSON.Data.Item[]);
+		
+		DECLARE my_credentials, emp ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );
+		
+		DECLARE EPOCH_TIME,TMP_TSP_START, TMP_TSP_END  TIMESTAMP;
+		SET EPOCH_TIME = CAST('1970-01-01T00:00:00.000+00.00' AS TIMESTAMP FORMAT 'IU');
+		DECLARE aa TIMESTAMP;
+		DECLARE a DECIMAL;
+		
+		WHILE i < count DO
+			-- InputRoot.JSON.Data.Item[i].break_start;
+			-- InputRoot.JSON.Data.Item[i].break_finish;
+			
+			SET emp.Item[] = (SELECT ME.INTERNAL_ID FROM Database.M_EMPLOYEE AS ME WHERE ME.ID = InputRoot.JSON.Data.Item[i].user_id);
+			
+			SET current_epoch = CAST(InputRoot.JSON.Data.Item[i].start AS CHARACTER);
+			SET TMP_TSP_START = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+			-- SET OutputRoot.JSON.Data.s = TMP_TSP_START;
+			
+			SET current_epoch = CAST(InputRoot.JSON.Data.Item[i].finish AS CHARACTER);
+			SET TMP_TSP_END = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+			-- SET OutputRoot.JSON.Data.e = TMP_TSP_END; 
+			
+			SET a = InputRoot.JSON.Data.Item[i].finish - InputRoot.JSON.Data.Item[i].start;
+			
+     		-- SET OutputRoot.JSON.Data.sales = CAST(InputRoot.JSON.Data.quarters.Item[i].Item[2].sales AS DECIMAL(12,2));
+			
+			/*
+			SET OutputRoot.JSON.Data.aaaa = CAST(a AS DECIMAL(12,2));
+			SET OutputRoot.JSON.Data.bbbb = CAST(a/28800 AS DECIMAL(12,2)) ; 
+			SET OutputRoot.JSON.Data.cccc = CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy-MM-dd');
+			SET OutputRoot.JSON.Data.dddd = CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyyMMdd');
+			SET OutputRoot.JSON.Data.eeee = CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy');
+			SET OutputRoot.JSON.Data.ffff = CAST(TMP_TSP_START AS CHARACTER FORMAT 'M');
+			*/
+			
+			-- SET mystr = 'NA,SSN,NA,StoreID(SiteID),NA, JobID, PunchTypeNum, Date, Date, Year, Month, ClockIn, ClockOut, Effort, Source' || CR;
+			
+			
+			-- actual time worked 
+			-- SET mystr = mystr || '1011237,"1260400009761...internal_id",1010185,"PZTH203038",1011071,"61",1,2018-08-01,20180801,2018,8,' || TMP_TSP_START || ',' || TMP_TSP_END || ',' || CAST(a/28800 AS DECIMAL(12,2)) || ',"PZ3038"' || CR;
+			SET mystr = '';
+			-- SET mystr = mystr || CAST(InputRoot.JSON.Data.Item[i].user_id AS CHARACTER) ||',';
+			SET mystr = mystr || '1011237,';
+			-- SET mystr = mystr || '"1260400009761...internal_id",1010185,"PZTH203038",1011071,"61",1,';
+			SET mystr = mystr || '"' || CAST(emp.Item[1].INTERNAL_ID AS CHARACTER) ||'",1010185,"PZTH203038",1011071,"61",1,';
+			-- SET mystr = mystr || CAST(emp.Item[1].INTERNAL_ID AS CHARACTER) ||',1010185,"PZTH203038",1011071,"61",1,';
+			SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy-MM-dd') || ',';
+			SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyyMMdd') || ','; 
+			SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy') || ',';
+			SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'M') || ',';
+			SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy-MM-dd hh:mm:ss') || ',';
+			SET mystr = mystr || CAST(TMP_TSP_END AS CHARACTER FORMAT 'yyyy-MM-dd hh:mm:ss') || ',';
+			SET mystr = mystr || CAST(CAST(a/28800 AS DECIMAL(12,2)) AS CHARACTER) || ',';
+			SET mystr = mystr || '"PZ3038"' || CR;
+			-- SET OutputRoot.JSON.Data.gggg = mystr;
+			
+			-- if having a break
+   IF InputRoot.JSON.Data.Item[i].break_start IS NOT NULL THEN
+    SET current_epoch = CAST(InputRoot.JSON.Data.Item[i].break_start AS CHARACTER);
+    SET TMP_TSP_START = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+    SET current_epoch = CAST(InputRoot.JSON.Data.Item[i].break_finish AS CHARACTER);
+    SET TMP_TSP_END = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+    -- SET a = InputRoot.JSON.Data.Item[i].finish - InputRoot.JSON.Data.Item[i].start;
+    SET a = InputRoot.JSON.Data.Item[i].break_finish - InputRoot.JSON.Data.Item[i].break_start;
+    -- SET mystr = mystr || '1011237,"1260400009761",1010185,"PZTH203038",1011071,"61",3,2018-08-01,20180801,2018,8,2018-08-01 18:03:00,2018-08-01 20:00:00,1.950,"PZ3038"' || CR;
+    SET mystr = mystr || '1011237,';
+    SET mystr = mystr || '"' || CAST(emp.Item[1].INTERNAL_ID AS CHARACTER) ||'",1010185,"PZTH203038",1011071,"61",3,';
+    SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy-MM-dd') || ',';
+    SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyyMMdd') || ','; 
+    SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy') || ',';
+    SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'M') || ',';
+    SET mystr = mystr || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyy-MM-dd hh:mm:ss') || ',';
+    SET mystr = mystr || CAST(TMP_TSP_END AS CHARACTER FORMAT 'yyyy-MM-dd hh:mm:ss') || ',';
+    SET mystr = mystr || CAST(CAST(a/28800 AS DECIMAL(12,2)) AS CHARACTER) || ',';
+    SET mystr = mystr || '"PZ3038"' || CR;
+    
+     
+   END IF;
+			-- SET mystr = mystr || '1011237,"1260400009761",1010185,"PZTH203038",1011071,"61",3,2018-08-01,20180801,2018,8,2018-08-01 18:03:00,2018-08-01 20:00:00,1.950,"PZ3038"' || CR;
+			
+		
+		
+			-- SET OutputLocalEnvironment.Destination.File.Directory = 'C:\IIB';
+			-- SET OutputLocalEnvironment.Destination.File.Name = 'PUNCH.TXT';
+			-- SET OutputLocalEnvironment.Destination.File.Name = 'PZ_EmployeePunches_' || CAST(TMP_TSP_START AS CHARACTER FORMAT 'yyyyMM') || '01.TXT';
+			SET OutputLocalEnvironment.Destination.File.Name = 'PZ_EmployeePunches_' || CAST(CURRENT_TIMESTAMP AS CHARACTER FORMAT 'yyyyMMdd') || '.TXT';
+				
+				
+			SET OutputRoot.BLOB.BLOB = CAST(mystr AS BLOB CCSID 874);
+			-- PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+			PROPAGATE TO TERMINAL 'out1' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+			
+			
+			
+			
+			SET i = i + 1;
+		END WHILE;
+		
+		
+		/*
+		
+		SET mystr = mystr || '1,2,3' || CR;
+		SET mystr = mystr || '4,5,6' || CR; 
+		*/
+		/*
+		NA,SSN,NA,StoreID(SiteID),NA, JobID, PunchTypeNum, Date, Date, Year, Month, ClockIn, ClockOut, Effort, Source
+		1011237,"1260400009761",1010185,"PZTH203038",1011071,"61",1,2018-08-01,20180801,2018,8,2018-08-01 18:03:00,2018-08-01 20:00:00,1.950,"PZ3038"
+		1011237,"1260400009761",1010185,"PZTH203038",1011071,"61",3,2018-08-01,20180801,2018,8,2018-08-01 20:00:00,2018-08-01 20:03:00,0.050,"PZ3038"
+		
+		SET OutputRoot.BLOB.BLOB = CAST(mystr AS BLOB CCSID 874);
+		*/
+		
+		
+		
+		-- PROPAGATE TO TERMINAL 'out' MESSAGE OutputRoot;
+		
+		-- CALL CopyEntireMessage();
+		
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

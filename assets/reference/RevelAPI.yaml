@@ -1,0 +1,230 @@
+swagger: "2.0"
+info:
+  title: "Revel API"
+  description: "API description in Markdown."
+  version: "1.0.0"
+host: minor-demo.revelup.com
+basePath: /
+schemes:
+- "https"
+paths:
+  /enterprise/Establishment/:
+    get:
+      summary: 'Get Establishment'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "id"
+        in: "query"
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: OK
+          
+  /resources/Address/:
+    get:
+      summary: 'Get Address'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: OK
+  /resources/EmployeeRoleEstablishment/:
+    get:
+      summary: 'Get Enrollment'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: OK
+  
+  /resources/Department/:
+    get:
+      summary: 'Get Department'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "id"
+        in: "query"
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: OK
+  /resources/Role/:
+    get:
+      summary: 'Get Role'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: OK
+  /resources/Employee/:
+    get:
+      summary: 'Get Role'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "id"
+        in: "query"
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: OK
+  /resources/TimeSheetEntry/:
+    get:
+      summary: 'Get Timesheet'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      - name: "employee"
+        in: "query"
+        type: "integer"
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "created_date"
+        in: "query"
+        type: "string"
+      - name: "updated_date"
+        in: "query"
+        type: "string"
+      - name: "clock_in"
+        in: "query"
+        type: "string"
+      - name: "clock_out"
+        in: "query"
+        type: "string"
+      responses:
+        200:
+          description: OK
+  
+  /reports/hourly_sales/json/:
+    get:
+      summary: 'Get Live Sales'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "range_from"
+        in: "query"
+        type: "string"
+      - name: "range_to"
+        in: "query"
+        type: "string"
+      responses:
+        200:
+          description: OK
+  /resources/TimeSchedule/:
+    post:
+      operationId: "CreateSchedule"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a schedule for an employee"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"
+    

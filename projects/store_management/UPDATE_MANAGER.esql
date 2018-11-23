@@ -1,0 +1,47 @@
+
+
+CREATE COMPUTE MODULE UPDATE_MANAGER_ID
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		SET SQLErrorText1 = '';
+		--* SET data_length = CARDINALITY(InputRoot.JSON.Data.objects.Item[]);
+		--* SET out_msg = CAST(data_length AS CHARACTER);
+		
+		SET out_msg = CAST(InputRoot.JSON.Data.id AS CHARACTER);
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );		
+		PROPAGATE TO TERMINAL 'out1';
+
+		
+		UPDATE Database.M_MANAGER AS AE
+ 		SET id = InputRoot.JSON.Data.id,
+			flag = '0'
+		WHERE AE.name = InputRoot.JSON.Data.name and AE.email = InputRoot.JSON.Data.email;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;
+		
+		SET out_msg = 'SQLCode = '||CAST(SQLCode1 AS CHARACTER);
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );		
+		PROPAGATE TO TERMINAL 'out1';
+		
+		SET out_msg = 'SQLErrorText = '||SQLErrorText1;
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );
+		PROPAGATE TO TERMINAL 'out1';
+		
+		
+		SET OutputRoot.JSON = InputRoot.JSON;
+		PROPAGATE TO TERMINAL 'out1';
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;
+

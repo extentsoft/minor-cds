@@ -1,0 +1,376 @@
+CREATE COMPUTE MODULE INSERT_ESTABLISHMENT
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		
+		
+		--* SET data_length = CARDINALITY(InputRoot.JSON.Data.objects.Item[]);
+		--* SET out_msg = CAST(data_length AS CHARACTER);
+		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
+		
+		--* SET out_msg = InputRoot.JSON.Data.Item.id;
+		--* SET OutputRoot.BLOB.BLOB = CAST(InputRoot AS BLOB  CCSID 874);
+		-- *SET OutputRoot.JSON.Data.*[1] =  InputRoot.JSON.Data.*[1];
+		--* SET OutputRoot.JSON = InputRoot.JSON;
+		--* SET OutputRoot.JSON.Data.a =  InputRoot.JSON.Data.Item.id;
+		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
+		--* SET OutputRoot.JSON.Data.A = InputRoot.JSON.Data.objects.Item[2].email;
+		DECLARE my_credentials ROW;
+				
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );
+		
+		DELETE FROM Database.ADR_EST AS D;
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;	
+		
+		DECLARE i INTEGER 1;
+		FOR source AS InputRoot.JSON.Data.objects.Item[] DO
+		insert
+		into Database.ADR_EST
+		(
+			about_access_to_location,
+			about_description,
+			about_title,
+			active_est,
+			address,
+			android_settings,
+			billing_enabled,
+			cancelable_by_billing,
+			cancellation_date,
+			client_type,
+			contact_name,
+			created_by_est,
+			created_date_est,
+			ctuit,
+			currency,
+			delivery_management,
+			disabled_backend_for_payment,
+			disabled_backend_for_payment_date,
+			disabled_for_cancellation,
+			disabled_for_payment,
+			display_unit_bg_url,
+			effective_from,
+			effective_to,
+			email,
+			export_type,
+			fax,
+			id_est,
+			images,
+			kiosk_image_url_legacy,
+			location_account_status,
+			location_email,
+			location_name,
+			lock_add_category,
+			lock_add_discount,
+			lock_add_modifierclass,
+			logo_img,
+			logo_url_legacy,
+			manager,
+			matrix_inventory,
+			name,
+			notes,
+			ns_internal_id,
+			on_boarding_completed,
+			on_boarding_completed_date,
+			on_boarding_started_date,
+			payment_gateway,
+			phone,
+			quick_books,
+			resource_uri_est,
+			retailer_id,
+			rti,
+			sc_cert,
+			settings,
+			show_backend_payment_warning,
+			show_payment_warning,
+			site_number,
+			social_networks,
+			sorting_id,
+			store_number,
+			surcharge,
+			tax,
+			tax_payer_num,
+			time_worked_available,
+			time_zone,
+			type_of_service,
+			updated_by_est,
+			updated_date_est,
+			vip)
+		VALUES
+		(
+			source.about_access_to_location,
+			source.about_description,
+			source.about_title,
+			source.active,
+			source.address,
+			source.android_settings,
+			source.billing_enabled,
+			source.cancelable_by_billing,
+			source.cancellation_date,
+			source.client_type,
+			source.contact_name,
+			source.created_by,
+			source.created_date,
+			source.ctuit,
+			source.currency,
+			source.delivery_management,
+			source.disabled_backend_for_payment,
+			source.disabled_backend_for_payment_date,
+			source.disabled_for_cancellation,
+			source.disabled_for_payment,
+			source.display_unit_bg_url,
+			source.effective_from,
+			source.effective_to,
+			source.email,
+			source.export_type,
+			source.fax,
+			TRIM(CAST(source.id AS CHARACTER  CCSID 1208)),
+			source.images,
+			source.kiosk_image_url_legacy,
+			source.location_account_status,
+			source.location_email,
+			source.location_name,
+			source.lock_add_category,
+			source.lock_add_discount,
+			source.lock_add_modifierclass,
+			source.logo_img,
+			source.logo_url_legacy,
+			source.manager,
+			source.matrix_inventory,
+			source.name,
+			source.notes,
+			source.ns_internal_id,
+			source.on_boarding_completed,
+			source.on_boarding_completed_date,
+			source.on_boarding_started_date,
+			source.payment_gateway,
+			source.phone,
+			source.quick_books,
+			source.resource_uri,
+			source.retailer_id,
+			source.rti,
+			source.sc_cert,
+			source.settings,
+			source.show_backend_payment_warning,
+			source.show_payment_warning,
+			source.site_number,
+			source.social_networks,
+			source.sorting_id,
+			source.store_number,
+			source.surcharge,
+			source.tax,
+			source.tax_payer_num,
+			source.time_worked_available,
+			source.time_zone,
+			source.type_of_service,
+			source.updated_by,
+			source.updated_date,
+			source.vip);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '0';
+		
+		RETURN TRUE;
+	END;
+
+END MODULE;
+
+
+
+
+CREATE COMPUTE MODULE UPDATE_ADDRESS
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		SET SQLErrorText1 = '';
+		--* SET data_length = CARDINALITY(InputRoot.JSON.Data.objects.Item[]);
+		--* SET out_msg = CAST(data_length AS CHARACTER);
+		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
+		
+		--* SET out_msg = InputRoot.JSON.Data.Item.id;
+		--* SET OutputRoot.BLOB.BLOB = CAST(InputRoot AS BLOB  CCSID 874);
+		-- *SET OutputRoot.JSON.Data.*[1] =  InputRoot.JSON.Data.*[1];
+		--* SET OutputRoot.JSON = InputRoot.JSON;
+		--* SET OutputRoot.JSON.Data.a =  InputRoot.JSON.Data.Item.id;
+		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
+		--*SET OutputRoot.JSON.Data.A = InputRoot.JSON.Data.objects;
+		
+		DECLARE i INTEGER 1;
+		FOR source AS InputRoot.JSON.Data.objects.Item[] DO
+		
+		UPDATE Database.ADR_EST AS AE
+ 		SET active_adr = source.active,
+			alias = source.alias,
+			building_number = source.building_number,
+			city_name = source.city_name,
+			country = source.country,
+			county = source.county,
+			created_by_adr = source.created_by,
+			created_date_adr = source.created_date,
+			district = source.district,
+			door = source.door,
+			id_adr = source.id,
+			is_external = source.is_external,
+			latitude = source.latitude,
+			line_1 = CAST(source.line_1 AS CHARACTER  CCSID 1208),
+			line_2 = CAST(source.line_2 AS CHARACTER  CCSID 1208),
+			longitude = source.longitude,
+			province = source.province,
+			resource_uri_adr = source.resource_uri,
+			state = source.state,
+			updated_by_adr = source.updated_by,
+			updated_date_adr = source.updated_date,
+			uuid = source.uuid,
+			zipcode = source.zipcode
+			 WHERE AE.address = source.resource_uri;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = CAST(i AS CHARACTER)||SQLErrorText1||CAST(source.line_1 AS CHARACTER );
+					
+		COMMIT;
+		
+		SET i = i + 1;
+		END FOR;
+		
+		SET out_msg = 'SQLCode = '||CAST(SQLCode1 AS CHARACTER);
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 1208 );		
+		PROPAGATE TO TERMINAL 'out1';
+		
+		SET out_msg = 'SQLErrorText = '||SQLErrorText1;
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 1208 );
+		PROPAGATE TO TERMINAL 'out1';
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;
+
+
+
+
+
+
+CREATE COMPUTE MODULE POST_LOCATION
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE myRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.ADR_EST AS R;
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		--* SET myRow.ResultSet[] = select R.* from Database.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		DECLARE i INTEGER 1;
+		DECLARE count INTEGER;
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+		
+
+		--* SET OutputRoot = InputRoot;
+		SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
+		
+		
+		--* SET OutputRoot.JSON.Data.ResultSet.A = InputRoot.JSON.Data.ResultSet[1].NAME;
+
+		
+		--* PROPAGATE TO TERMINAL 'out1';
+		
+		WHILE i <= count DO 
+				
+		SET OutputRoot.JSON.Data.name = InputRoot.JSON.Data.ResultSet[i].NAME;
+		SET OutputRoot.JSON.Data.short_name = '';
+		SET OutputRoot.JSON.Data.latitude = InputRoot.JSON.Data.ResultSet[i].LATITUDE;
+		SET OutputRoot.JSON.Data.longitude = InputRoot.JSON.Data.ResultSet[i].LONGITUDE;
+		SET OutputRoot.JSON.Data.address = InputRoot.JSON.Data.ResultSet[i].LINE_1 || ' ' || InputRoot.JSON.Data.ResultSet[i].LINE_2 || ',' || InputRoot.JSON.Data.ResultSet[i].PROVINCE || ',' || InputRoot.JSON.Data.ResultSet[i].ZIPCODE;
+		-- SET OutputRoot.JSON.Data.address = InputRoot.JSON.Data.ResultSet[i].LINE_1 || ' ' || InputRoot.JSON.Data.ResultSet[i].LINE_2 || ' ' || InputRoot.JSON.Data.ResultSet[i].DISTRICT || ' ' || InputRoot.JSON.Data.ResultSet[i].PROVINCE || ' ' || InputRoot.JSON.Data.ResultSet[i].ZIPCODE;
+		SET OutputRoot.JSON.Data.time_zone = 'Asia/Bangkok';
+		SET OutputRoot.JSON.Data.name = InputRoot.JSON.Data.ResultSet[i].NAME;
+		SET OutputRoot.JSON.Data.latitude = InputRoot.JSON.Data.ResultSet[i].LATITUDE;
+		SET OutputRoot.JSON.Data.longitude = InputRoot.JSON.Data.ResultSet[i].LONGITUDE;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;
+		PROPAGATE TO TERMINAL 'out1';
+		PROPAGATE;
+		
+		SET i = i + 1;
+		END WHILE;
+		
+		
+		PROPAGATE TO TERMINAL 'out2';
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;
+
+
+
+
+
+CREATE COMPUTE MODULE UPDATE_M_FLAG
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		SET SQLErrorText1 = '';
+		--* SET data_length = CARDINALITY(InputRoot.JSON.Data.objects.Item[]);
+		--* SET out_msg = CAST(data_length AS CHARACTER);
+		
+
+		
+		UPDATE Database.M_LOCATION AS AE
+ 		SET location_id = InputRoot.JSON.Data.id,
+			flag = '0'
+		WHERE AE.name = InputRoot.JSON.Data.name;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;
+		
+		SET out_msg = 'SQLCode = '||CAST(SQLCode1 AS CHARACTER);
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );		
+		PROPAGATE TO TERMINAL 'out1';
+		
+		SET out_msg = 'SQLErrorText = '||SQLErrorText1;
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );
+		PROPAGATE TO TERMINAL 'out1';
+		
+		
+		SET OutputRoot.JSON = InputRoot.JSON;
+		PROPAGATE TO TERMINAL 'out1';
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

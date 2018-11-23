@@ -1,0 +1,118 @@
+
+
+CREATE COMPUTE MODULE SA_Datastream_Sync_Datastream
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		
+		-- INSERT INTO Database.MINORDB2.db2inst1.M_STORESTAT(LOC_ID,DS_ID,DS_TYPE,UPDATED_TIME) VALUES(10,10, 'sales',CURRENT_TIMESTAMP);
+		
+		-- SET OutputLocalEnvironment.Destination.File.Directory = 'C:\IIB';
+		-- SET OutputLocalEnvironment.Destination.File.Name = 'datastream.log';
+		
+		-- SET OutputRoot.JSON.Data.ResultSet[] = select * from Database.MINORDB.db2inst1.M_LOCATION where id_adr not in (select loc_id from Database.MINORDB.db2inst1.M_STORESTAT);
+		-- SET OutputRoot.JSON.Data.ResultSet[] = select * from Database.MINORDB.db2inst1.M_LOCATION where location_id not in (select loc_id from Database.MINORDB.db2inst1.M_STORESTAT);
+		-- PROPAGATE TO TERMINAL 'out' MESSAGE OutputRoot;
+		
+		------ ************** SALES ************** ---------------
+		
+     	DECLARE i INTEGER 1;
+		DECLARE count INTEGER;
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.MINORDB.db2inst1.C_CREDENTIALS AS CC, Database.MINORDB.db2inst1.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+				
+		SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
+     	
+     	WHILE i <= count DO 
+			INSERT INTO Database.MINORDB.db2inst1.M_STORESTAT(loc_id, ds_id, ds_type, dj_id) VALUES( InputRoot.JSON.Data.ResultSet[i].LOCATION_ID, -1,'sales', -1);
+			COMMIT;
+			
+			-- SET OutputLocalEnvironment.Destination.REST.Request.Parameters.id = 13;
+  			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;			
+		
+		
+			-- ms = my sales
+			-- ss = staging sales
+			-- ts# = test sales 
+		
+			SET OutputRoot.JSON.Data.name = 'ts30_' || InputRoot.JSON.Data.ResultSet[i].LOCATION_ID || '_ds';
+			SET OutputRoot.JSON.Data.data_interval = 900;
+		
+		
+		
+			PROPAGATE TO TERMINAL 'out1' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+		
+			SET i = i + 1;
+		END WHILE;
+     	
+     	------ ************** TRANSACTIONS ************** ---------------
+     	
+     	-- SET i = 1;
+     	
+     	-- SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
+     	-- WHILE i <= count DO 
+		
+		-- SET OutputRoot.JSON.Data.name = InputRoot.JSON.Data.ResultSet[i].SITE_NUMBER || '_transactions';
+		-- SET OutputRoot.JSON.Data.data_interval = 900;
+		
+		-- PROPAGATE TO TERMINAL 'out1';
+		
+		-- SET i = i + 1;
+		-- END WHILE;
+     	
+     	
+     	PROPAGATE;
+     	-- SET OutputRoot.JSON.Data.name = 'TPC_sales A';
+		-- SET OutputRoot.JSON.Data.data_interval = 900;
+		-- PROPAGATE TO TERMINAL 'out1';
+		
+		-- SET OutputRoot.HTTPRequestHeader."Content-Type" = 'application/json'; 
+		-- DELETE FIELD OutputRoot.*[<];
+		
+		
+		
+		-- SET OutputRoot.JSON.Data.ResultSet[] = (SELECT T.LOCATION_ID, T.FLAG, T.ID_ADR FROM Database.MINORDB2.db2inst1.M_LOCATION AS T);
+		-- SET OutputRoot.JSON.Data.ResultSet1[] = (select TS.LOC_ID from Database.MINORDB2.db2inst1.M_STORESTAT AS TS);
+		-- SET OutputRoot.JSON.Data.ResultSet2[] = (SELECT T.LOCATION_ID FROM Database.MINORDB2.db2inst1.M_LOCATION AS T);
+		-- SET OutputRoot.JSON.Data.ResultSet[] = (SELECT T.LOCATION_ID FROM Database.MINORDB.db2inst1.M_LOCATION AS T where T.LOCATION_ID IS NOT NULL AND T.LOCATION_ID not in (select TS.LOC_ID from Database.MINORDB.db2inst1.M_STORESTAT AS TS));
+		-- PROPAGATE;
+		 
+		 
+		-- SET OutputRoot.XMLNS.Test.Result[] = (SELECT T.LOCATION_ID, T.FLAG, T.ID_ADR FROM Database.MINORDB2.db2inst1.M_LOCATION AS T);		
+     	-- DECLARE mystr CHARACTER;
+		-- SET mystr = OutputRoot.JSON.Data.*[2].LOCATION_ID;		
+		-- SET OutputRoot.BLOB.BLOB = CAST(mystr AS BLOB CCSID 874);
+		-- PROPAGATE TO TERMINAL 'out3' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+		-- PROPAGATE;
+			
+     	
+  
+     	
+--		FOR source as OutputRoot.JSON.Data.ResultSet[] DO
+			----- DELETE FIELD OutputRoot.*[<];
+			--SET OutputRoot.JSON.Data.name = source.SITE_NUMBER || '_sales';
+		--	SET OutputRoot.JSON.Data.data_interval = 900;
+	--		PROPAGATE TO TERMINAL 'out1' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+		
+			
+		-- END FOR;
+		
+		RETURN FALSE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

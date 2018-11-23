@@ -1,0 +1,78 @@
+CREATE COMPUTE MODULE POST_EMPLOYEE
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE myRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.TMP_LOCATION AS R;
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.TMP_LOCATION AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		--* SET myRow.ResultSet[] = select R.* from Database.TMP_LOCATION AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		DECLARE i INTEGER 1;
+		DECLARE j INTEGER 1;
+		DECLARE count INTEGER;
+		DECLARE length INTEGER;
+		DECLARE	did	INTEGER;
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+		
+		
+
+		--* SET OutputRoot = InputRoot;
+		SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
+		
+		
+		--* SET OutputRoot.JSON.Data.ResultSet.A = InputRoot.JSON.Data.ResultSet[1].NAME;
+
+		
+		--* PROPAGATE TO TERMINAL 'out1';
+		
+		WHILE i <= count DO 
+				
+		SET OutputRoot.JSON.Data.name = InputRoot.JSON.Data.ResultSet[i].FIRST_NAME||' '||InputRoot.JSON.Data.ResultSet[i].LAST_NAME;
+		SET OutputRoot.JSON.Data.phone = InputRoot.JSON.Data.ResultSet[i].PHONE_NUMBER;
+		SET OutputRoot.JSON.Data.employment_start_date = InputRoot.JSON.Data.ResultSet[i].EMPLOYEE_START;
+		SET OutputRoot.JSON.Data.email = InputRoot.JSON.Data.ResultSet[i].EMAIL;
+		SET OutputRoot.JSON.Data.employee_id = InputRoot.JSON.Data.ResultSet[i].INTERNAL_ID;
+		SET OutputRoot.JSON.Data.award_template_id = '10';
+		-- SET OutputRoot.JSON.Data.department_ids = InputRoot.JSON.Data.ResultSet[i].ID_DEPARTMENT;
+		
+		SET length = LENGTH(InputRoot.JSON.Data.ResultSet[i].ID_DEPARTMENT);
+		SET did = TRIM(SUBSTRING(InputRoot.JSON.Data.ResultSet[i].ID_DEPARTMENT from 1 for 6));		
+		
+		CREATE FIELD OutputRoot.JSON.Data.department_ids IDENTITY (JSON.Array)department_ids;
+		CREATE LASTCHILD OF OutputRoot.JSON.Data.department_ids TYPE NameValue NAME 'Item' VALUE did;
+		
+		SET j = 9;
+		
+		WHILE j <= length DO
+			
+			SET did = TRIM(SUBSTRING(InputRoot.JSON.Data.ResultSet[i].ID_DEPARTMENT from j for 6));		
+			CREATE LASTCHILD OF OutputRoot.JSON.Data.department_ids TYPE NameValue NAME 'Item' VALUE did;
+			
+			
+			SET j = j + 8;
+		END WHILE;
+		
+		--CREATE FIELD OutputRoot.JSON.Data IDENTITY (JSON.Array)department_ids;
+		--SET OutputRoot.JSON.Data.department_ids.Item[1] = InputRoot.JSON.Data.ResultSet[i].ID;
+		
+		-- PROPAGATE TO TERMINAL 'out1';
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;	
+		PROPAGATE;
+		
+		SET i = i + 1;
+		END WHILE;
+		
+		PROPAGATE TO TERMINAL 'out1';
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

@@ -1,0 +1,25 @@
+{
+  "name": "minor-cds",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thanakorn-es/minor-cds.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thanakorn-es/minor-cds/issues"
+  },
+  "homepage": "https://github.com/thanakorn-es/minor-cds#readme",
+  "dependencies": {
+    "app-root-path": "^2.1.0",
+    "bluebird": "^3.5.1",
+    "morgan": "^1.9.0",
+    "winston": "^3.0.0"
+  }
+}

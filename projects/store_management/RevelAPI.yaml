@@ -1,0 +1,196 @@
+swagger: "2.0"
+info:
+  title: "Revel API"
+  description: "API description in Markdown."
+  version: "1.0.0"
+host: "pz-th-prd.revelup.com"
+basePath: /
+schemes:
+- "https"
+paths:
+  /enterprise/Establishment/:
+    get:
+      summary: Returns a list of Establishment.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "OK"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+  /resources/Address/:
+    get:
+      summary: Returns a list of Address.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "OK"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+  /resources/EmployeeRoleEstablishment/:
+    get:
+      summary: Returns a list of EmployeeRoleEstablishment.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "OK"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+  /resources/Role/:
+    get:
+      summary: Returns a list of Role.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "OK"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+  /resources/Employee/:
+    get:
+      summary: Returns a list of Employee.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "OK"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+  /resources/TimeSheetEntry/:
+    get:
+      summary: 'Get Timesheet'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      - name: "employee"
+        in: "query"
+        type: "integer"
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "created_date"
+        in: "query"
+        type: "string"
+      - name: "updated_date__gte"
+        in: "query"
+        type: "string"
+      - name: "clock_in"
+        in: "query"
+        type: "string"
+      - name: "clock_out"
+        in: "query"
+        type: "string"
+      responses:
+        200:
+          description: OK
+  
+  /reports/hourly_sales/json/:
+    get:
+      summary: 'Get Live Sales'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "range_from"
+        in: "query"
+        type: "string"
+      - name: "range_to"
+        in: "query"
+        type: "string"
+      responses:
+        200:
+          description: OK
+  /resources/TimeSchedule/:
+    delete:
+      operationId: "DeleteSchedule"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Delete a schedule for an employee"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "establishment"
+        in: "query"
+        type: "integer" 
+    post:
+      operationId: "CreateSchedule"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Create a schedule for an employee"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "body"
+        required: true
+        in: "body"
+        schema:
+          type: "object"
+        description: "body_data"

@@ -1,0 +1,57 @@
+CREATE COMPUTE MODULE INSERT_T_USER
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE my_credentials ROW;
+		
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );
+		
+		
+		DELETE FROM Database.T_USER AS D;
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;	
+		
+		DECLARE i INTEGER 1;
+
+		FOR source AS InputRoot.JSON.Data.Item[] DO
+		
+		insert
+		into Database.T_USER
+		(
+			id,
+			name,
+			email,
+			phone_number,
+			employee_start,
+			report_department_id,
+			internal_id)
+		VALUES
+		(
+			source.id,
+			source.name,
+			source.email,
+			source.phone,
+			source.employment_start_date,
+			source.report_department_id,
+			source.employee_id);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		SET i = i + 1;
+		END FOR;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '0';
+		
+	END;
+
+END MODULE;
