@@ -1,0 +1,88 @@
+
+
+CREATE COMPUTE MODULE SA_Sales_Format_Report
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		/*
+		
+		DECLARE source CHARACTER '01:00 AM - 01:14 AM';
+		DECLARE source1, source2 CHARACTER;
+		SET source1 = TRIM(SUBSTRING(source BEFORE '-'));
+		SET source2 = TRIM(SUBSTRING(source AFTER '-'));
+		DECLARE target1, target2 TIME;
+		DECLARE pattern CHARACTER 'hh:mm a';
+		SET target1 = CAST(source1 AS TIME FORMAT pattern);
+		SET target2 = CAST(source2 AS TIME FORMAT pattern);
+		-- INSERT INTO Database.MINORDB2.db2inst1.TEST_TIME(C1,C2) VALUES(target1, target2);
+		-- COMMIT;
+		
+		SET source = '01:15 AM - 01:29 AM';
+		SET source1 = TRIM(SUBSTRING(source BEFORE '-'));
+		SET source2 = TRIM(SUBSTRING(source AFTER '-'));
+		SET target1 = CAST(source1 AS TIME FORMAT pattern);
+		SET target2 = CAST(source2 AS TIME FORMAT pattern);
+		-- INSERT INTO Database.MINORDB2.db2inst1.TEST_TIME(C1,C2) VALUES(target1, target2);
+		-- COMMIT;
+		
+		SET source = '01:30 AM - 01:44 AM';
+		SET source1 = TRIM(SUBSTRING(source BEFORE '-'));
+		SET source2 = TRIM(SUBSTRING(source AFTER '-'));
+		SET target1 = CAST(source1 AS TIME FORMAT pattern);
+		SET target2 = CAST(source2 AS TIME FORMAT pattern);
+		-- INSERT INTO Database.MINORDB2.db2inst1.TEST_TIME(C1,C2) VALUES(target1, target2);
+		-- COMMIT;
+		
+		SET source = '01:45 AM - 01:59 AM';
+		SET source1 = TRIM(SUBSTRING(source BEFORE '-'));
+		SET source2 = TRIM(SUBSTRING(source AFTER '-'));
+		SET target1 = CAST(source1 AS TIME FORMAT pattern);
+		SET target2 = CAST(source2 AS TIME FORMAT pattern);
+		-- INSERT INTO Database.MINORDB2.db2inst1.TEST_TIME(C1,C2) VALUES(target1, target2);
+		-- COMMIT;
+		
+		
+		DECLARE t1 TIME CURRENT_TIME;
+		DECLARE t2 TIME CURRENT_TIME;
+		
+		-- SET OutputRoot.XMLNS.Data.Result[] = (SELECT A.C1, A.C2 FROM Database.MINORDB2.db2inst1.test_time as A);
+		
+		
+		SET OutputRoot.XMLNS.Data.Result[] = (SELECT A.C1, A.C2 FROM Database.MINORDB.db2inst1.test_time as A where A.C1 <= t1 AND A.C2 > t2);
+		
+		-- SET OutputRoot.XMLNS.Data.t1 = CURRENT_TIME;
+		*/
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.MINORDB.db2inst1.C_CREDENTIALS AS CC, Database.MINORDB.db2inst1.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+		
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;			
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."id" = InputLocalEnvironment.Variables.datastream;
+  		SET OutputRoot.JSON.Data.time = InputRoot.JSON.Data.period;
+  		SET OutputRoot.JSON.Data.stat = InputRoot.JSON.Data.sales;
+		SET OutputRoot.JSON.Data.type = 'sales';
+	
+		PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+		
+		
+		PROPAGATE;
+		
+		
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

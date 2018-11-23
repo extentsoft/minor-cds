@@ -1,0 +1,182 @@
+
+
+CREATE COMPUTE MODULE SM_Schedul_CreateSchedule
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		/*
+		{
+			"id":388338,
+			"start":"2018-08-13",
+			"finish":"2018-08-19",
+			"updated_at":1534479202,
+			"schedules":
+			[
+				{
+					"date":"2018-08-13",
+					"schedules":
+					[
+						{
+							"id":39746911,
+							"roster_id":388338,
+							"user_id":657723,
+							"start":1534125600,
+							"finish":1534136400,
+							"breaks":[],
+							"automatic_break_length":0,
+							"department_id":177292,
+							"shift_detail_id":null,
+							"last_published_at":1534495678,
+							"updated_at":1534495678
+						},
+						{"id":39746912,"roster_id":388338,"user_id":657725,"start":1534140000,"finish":1534168800,"breaks":[],"automatic_break_length":30,"department_id":177295,"shift_detail_id":null,"last_published_at":null,"updated_at":1534479267}
+					]
+				},
+				{
+					"date":"2018-08-14",
+					"schedules":[
+						{"id":39747245,"roster_id":388338,"user_id":657723,"start":1534208400,"finish":1534251600,"breaks":[],"automatic_break_length":30,"department_id":177292,"shift_detail_id":null,"last_published_at":1534495678,"updated_at":1534495678},
+						{"id":39747244,"roster_id":388338,"user_id":644723,"start":null,"finish":null,"breaks":[],"automatic_break_length":null,"department_id":null,"shift_detail_id":null,"last_published_at":null,"updated_at":1534495596}
+					]
+				},
+				{
+					"date":"2018-08-18",
+					"schedules":[
+						{"id":39747246,"roster_id":388338,"user_id":657723,"start":1534557600,"finish":1534568400,"breaks":[],"automatic_break_length":0,"department_id":177292,"shift_detail_id":null,"last_published_at":1534495678,"updated_at":1534495678}
+					]
+				}
+			]
+			
+		}
+		*/
+		
+		/*
+		curl 
+			-v -H "Content-type: application/json" -H "API-AUTHENTICATION: e70010c670c34ed1be518fcc81c52794:7339f22109fa4f5bab65c4221df3f05bbcbe1cf562914c329d11dd2d21342195" 
+			-X POST -d '{
+				"break_type": null, 
+				"created_by": "/enterprise/User/6/", 
+				"created_date": "2018-08-13T15:30:15.068664", 
+				"updated_by": "/enterprise/User/6/", 
+				"updated_date": "2018-08-13T15:30:15.068664",
+				"stage": 0, 
+				"establishment": "/enterprise/Establishment/15/", 
+				"department": "/resources/Department/2/", 
+				"role": "/resources/Role/2/", 
+				"employee": "/resources/Employee/3963/",
+				"shift_begin_time": "2018-08-14T01:00:00",
+				"shift_end_time": "2018-08-14T17:00:00"
+			}' 
+			https://minor-demo.revelup.com/resources/TimeSchedule/
+		*/
+		DECLARE i,j, no_roster, no_schedule INTEGER; 
+		SET i = 1;
+		SET j = 1;
+		SET no_roster = CARDINALITY(InputRoot.JSON.Data.schedules.Item[]);
+		
+		DECLARE EPOCH_TIME,TMP_TSP TIMESTAMP;
+		SET EPOCH_TIME = CAST('1970-01-01T00:00:00.000+00.00' AS TIMESTAMP FORMAT 'IU');
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.MINORDB.db2inst1.C_CREDENTIALS AS CC, Database.MINORDB.db2inst1.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );	
+		
+		/*
+		SET no_schedule = CARDINALITY(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[]);
+		SET OutputRoot.JSON.Data.no_roster = no_roster;
+		SET OutputRoot.JSON.Data.no_schedule = no_schedule;
+		PROPAGATE TO TERMINAL 'out1';
+		*/
+		
+		
+		DECLARE tmp, current_epoch CHARACTER;
+		DECLARE rvl_resource ROW;
+		
+		WHILE i <= no_roster DO
+			-- SET OutputRoot.JSON.Data.created_date = InputRoot.JSON.Data.schedules.Item[i].date;
+			
+			SET no_schedule = CARDINALITY(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[]);
+			DECLARE recentSchedule ROW;
+			
+			
+			WHILE j <= no_schedule DO
+				
+				
+				SET OutputRoot.JSON.Data.department =  '/resources/Department/2/';
+				SET OutputRoot.JSON.Data.created_by = '/enterprise/User/6/';
+				SET OutputRoot.JSON.Data.updated_by = '/enterprise/User/6/';
+				SET OutputRoot.JSON.Data.stage = CAST(0 AS INTEGER);
+			
+				SET current_epoch = CAST(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[j].start AS CHARACTER);
+				SET TMP_TSP = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+				SET tmp = CAST(TMP_TSP AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+				SET tmp = REPLACE(tmp, ' ', 'T');
+				SET OutputRoot.JSON.Data.shift_begin_time = tmp;
+				
+				SET current_epoch = CAST(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[j].finish AS CHARACTER);
+				SET TMP_TSP = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+				SET tmp = CAST(TMP_TSP AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+				SET tmp = REPLACE(tmp, ' ', 'T');
+				SET OutputRoot.JSON.Data.shift_end_time = tmp;
+				
+				SET current_epoch = CAST(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[j].updated_at AS CHARACTER);
+				SET TMP_TSP = EPOCH_TIME + CAST(current_epoch AS INTERVAL SECOND);
+				SET tmp = CAST(TMP_TSP AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+				SET tmp = REPLACE(tmp, ' ', 'T');
+				
+				SET OutputRoot.JSON.Data.updated_date = tmp;
+				SET OutputRoot.JSON.Data.created_date = tmp;
+				
+				SET rvl_resource.Item[] = (SELECT MR.RESOURCE_URI_EST AS ESTID, MR.RESOURCE_URI_ROLE AS ROLEID, ME.RESOURCE_URI AS EMPID FROM Database.MINORDB.db2inst1.M_EMPLOYEE AS ME, Database.MINORDB.db2inst1.M_ROLE AS MR WHERE ME.ID_DEPARTMENT = MR.ID AND ME.ID = InputRoot.JSON.Data.schedules.Item[i].schedules.Item[j].user_id AND ME.ID_DEPARTMENT = InputRoot.JSON.Data.schedules.Item[i].schedules.Item[j].department_id);
+				
+				SET OutputRoot.JSON.Data.establishment = rvl_resource.Item[1].ESTID;
+				SET OutputRoot.JSON.Data.role = rvl_resource.Item[1].ROLEID; 
+				SET OutputRoot.JSON.Data.employee = rvl_resource.Item[1].EMPID;
+		
+				-- CARDINALITY(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[]);
+				-- SET OutputRoot.JSON.Data.no_schedule = no_schedule;
+				-- PROPAGATE TO TERMINAL 'out1';
+		
+			
+				-- check if schedule was already push back to revel
+				-- SET recentSchedule.Item[] = (SELECT MS.ID FROM Database.MINORDB.db2inst1.M_SCHEDULE AS MS WHERE MS.EST_ID = xx AND MS.ROLE_ID = xx AND MS.EMP_ID = xx AND MS.CREATED_DATE = xx);
+		/*
+				INSERT INTO Database.MINORDB.db2inst1.M_SCHEDULE(m_start, m_finsih, est_id, role_id, emp_id)
+					VALUES(
+						OutputRoot.JSON.Data.shift_begin_time,
+						OutputRoot.JSON.Data.shift_end_time,
+						OutputRoot.JSON.Data.establishment,
+						OutputRoot.JSON.Data.role,
+						OutputRoot.JSON.Data.employee
+					);
+				COMMIT;		
+		*/
+		
+				SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;			
+		
+				PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+				
+				SET j = j + 1;
+			END WHILE;
+			
+			SET j = 1; 
+			SET i = i + 1;
+		END WHILE;
+		
+				
+		RETURN FALSE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
