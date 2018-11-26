@@ -1,0 +1,91 @@
+CREATE COMPUTE MODULE SELECT_R_EMPLOYEE
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE mySharedRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.MINORDB.db2inst1.TMP_LOCATION AS R;
+		
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select  R.name_role,L.location_id from Database.MINORDB.db2inst1.TMP_ROLE AS R,Database.MINORDB.db2inst1.M_LOCATION AS L where (R.establishment = L.resource_uri_est and L.location_id is not null) and (R.name_role  not in (select M.name from Database.MINORDB.db2inst1.M_ROLE AS M) and L.location_id  not in (select M.location_id from Database.MINORDB.db2inst1.M_ROLE AS M));
+		
+		SET OutputRoot.JSON.Data.ResultSet[] = PASSTHRU ('select  R.email,R.employee_start,R.first_name,R.last_name,R.phone_number,R.resource_uri_emp,SUBSTR(xmlserialize(xmlagg(xmltext(CONCAT( '', '',L.id))) as VARCHAR(1024)), 3) AS "id" from db2inst1.TMP_ROLE AS R,db2inst1.R_ROLE AS L where (R.resource_uri_role = L.resource_uri_role and R.establishment = L.resource_uri_est and L.id is not null) and (R.resource_uri_emp  not in (select MR.resource_uri from db2inst1.R_EMPLOYEE AS MR) and L.id  not in (select MM.id_department from db2inst1.R_EMPLOYEE AS MM)) group by R.email,R.employee_start,R.first_name,R.last_name,R.phone_number,R.resource_uri_emp');
+		
+		--* insert into Database.MINORDB.db2inst1.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		
+		DECLARE i INTEGER 1;
+		
+		FOR source AS OutputRoot.JSON.Data.ResultSet[] DO
+		insert
+		into Database.MINORDB.db2inst1.R_EMPLOYEE
+		(
+			id_department,
+		email,
+		employee_start,
+		first_name,
+		last_name,
+		phone_number,
+		resource_uri
+		)
+		VALUES
+		(
+			source.id,
+			source.EMAIL,
+			source.EMPLOYEE_START,
+			source.FIRST_NAME,
+			source.LAST_NAME,
+			source.PHONE_NUMBER,
+			source.RESOURCE_URI_EMP);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		
+		
+		SET OutputRoot.JSON.Data.UpdateID[] = select * from Database.MINORDB.db2inst1.M_EMPLOYEE;
+
+		FOR source AS OutputRoot.JSON.Data.UpdateID[] DO
+			
+		UPDATE Database.MINORDB.db2inst1.R_EMPLOYEE AS A
+		
+ 		SET id = source.ID,
+ 			flag = '0'
+ 		where A.resource_uri = source.RESOURCE_URI;
+ 		
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+ 		
+ 		END FOR;
+ 		
+ 		
+ 		
+		UPDATE Database.MINORDB.db2inst1.M_EMPLOYEE AS A
+		
+ 		SET flag = '3'
+ 		 			
+ 		where not exists (select * from Database.MINORDB.db2inst1.R_EMPLOYEE AS B where B.id = A.id);
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+
+ 		COMMIT;
+
+		SET OutputRoot.JSON.Data.Del[] = select A.id from Database.MINORDB.db2inst1.M_EMPLOYEE AS A where A.flag = '3';
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

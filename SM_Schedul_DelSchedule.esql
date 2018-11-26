@@ -1,0 +1,55 @@
+
+
+CREATE COMPUTE MODULE SM_Schedul_DelSchedule
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+
+		DECLARE i,count INTEGER; 
+		SET i = 1;
+		
+		DECLARE my_credentials ROW;
+		
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );	
+		
+		DECLARE est_id ROW;
+		SET est_id.Item[] = (SELECT E.ID_EST AS EID FROM Database.ADR_EST AS E);
+		/*
+		SET no_schedule = CARDINALITY(InputRoot.JSON.Data.schedules.Item[i].schedules.Item[]);
+		SET OutputRoot.JSON.Data.no_roster = no_roster;
+		SET OutputRoot.JSON.Data.no_schedule = no_schedule;
+		PROPAGATE TO TERMINAL 'out1';
+		*/
+		
+		
+		SET count = CARDINALITY(est_id.Item[]);
+		
+		WHILE i <= count DO
+			-- SET OutputRoot.JSON.Data.created_date = InputRoot.JSON.Data.schedules.Item[i].date;
+
+			
+			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;			
+			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."establishment" = est_id.Item[i].EID;
+			
+			PROPAGATE TO TERMINAL 'out1';
+
+			SET i = i + 1;
+		END WHILE;
+		
+				
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

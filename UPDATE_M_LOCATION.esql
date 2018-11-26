@@ -1,0 +1,34 @@
+
+
+CREATE COMPUTE MODULE UPDATE_M_LOCATION
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE mySharedRow ROW;
+		
+		SET OutputRoot.JSON.Data.UpdateLoc[] = select B.* from Database.IIB.db2inst1.T_LOCATION AS B,Database.IIB.db2inst1.M_LOCATION AS A where B.name = A.name and B.latitude = A.latitude and B.longitude = A.longitude;
+		
+		--* insert into Database.IIB.db2inst1.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+			
+		
+		FOR src AS OutputRoot.JSON.Data.UpdateLoc[] DO
+			
+		UPDATE Database.IIB.db2inst1.M_LOCATION AS A
+		
+ 		SET location_id = src.location_id;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		COMMIT;
+ 		
+ 		END FOR;
+ 		
+ 		
+		RETURN TRUE;
+	END;
+END MODULE;

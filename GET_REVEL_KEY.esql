@@ -1,10 +1,8 @@
 
 
-CREATE COMPUTE MODULE SA_Clockin_Get_Stage_Clockin
+CREATE COMPUTE MODULE GET_REVEL_KEY
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
-		-- CALL CopyMessageHeaders();
-		-- CALL CopyEntireMessage();
 		DECLARE my_credentials ROW;
 		
 		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );
@@ -15,15 +13,7 @@ CREATE COMPUTE MODULE SA_Clockin_Get_Stage_Clockin
 				
 		
 		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;
-		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."updated_date__gte" = CURRENT_TIMESTAMP - INTERVAL '1440' MINUTE;
-		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '2000';
-		-- PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment;
-		
-		
-		
-		
-		
-		
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '0';
 		RETURN TRUE;
 	END;
 
