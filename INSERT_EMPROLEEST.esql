@@ -1,0 +1,52 @@
+CREATE COMPUTE MODULE INSERT_EMPROLEEST
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE my_credentials ROW;
+		
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );
+
+		
+		DELETE FROM Database.TMP_ROLE AS D;
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;	
+		
+		DECLARE i INTEGER 1;
+		FOR source AS InputRoot.JSON.Data.objects.Item[] DO
+		insert
+		into Database.TMP_ROLE
+		(
+			id,
+			active,
+			employee,
+			establishment,
+			resource_uri,
+			role)
+		VALUES
+		(
+			source.id,
+			source.active,
+			source.employee,
+			source.establishment,
+			source.resource_uri,
+			source.role);
+
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '0';
+	END;
+
+END MODULE;

@@ -16,12 +16,7 @@ CREATE COMPUTE MODULE SA_Datastream_Sync_DSJ
 		
 		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;								
 		SET OutputRoot.JSON.Data.data_stream_id = InputRoot.JSON.Data.id;
-		SET OutputRoot.JSON.Data.data_streamable_type = 'Location';
-		
-		-- SET OutputLocalEnvironment.Variables.location = InputRoot.JSON.Data.ResultSet[i].LOCATION_ID;			
-		SET OutputRoot.JSON.Data.data_streamable_id = InputLocalEnvironment.Variables.location;
-		
-		SET OutputRoot.JSON.Data.rostering_ratio = 15;
+		SET OutputRoot.JSON.Data.data_streamable_type = 'Organisation';
 		PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
 		
 		RETURN FALSE;

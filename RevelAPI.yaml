@@ -3,42 +3,35 @@ info:
   title: "Revel API"
   description: "API description in Markdown."
   version: "1.0.0"
-host: minor-demo.revelup.com
+host: "pz-th-prd.revelup.com"
 basePath: /
 schemes:
 - "https"
 paths:
   /enterprise/Establishment/:
     get:
-      summary: 'Get Establishment'
-      description: ''
-      consumes:
-        - application/json 
+      summary: Returns a list of Establishment.
       produces:
-        - application/json 
+        - application/json
+      responses:
+        200:
+          description: "OK"
       parameters:
       - name: "API-AUTHENTICATION"
         in: "header"
         type: "string"
         required: true
-      - name: "id"
-        in: "query"
-        type: "integer"
       - name: "limit"
         in: "query"
         type: "integer"
-      responses:
-        200:
-          description: OK
-          
   /resources/Address/:
     get:
-      summary: 'Get Address'
-      description: ''
-      consumes:
-        - application/json 
+      summary: Returns a list of Address.
       produces:
-        - application/json 
+        - application/json
+      responses:
+        200:
+          description: "OK"
       parameters:
       - name: "API-AUTHENTICATION"
         in: "header"
@@ -47,98 +40,54 @@ paths:
       - name: "limit"
         in: "query"
         type: "integer"
-      responses:
-        200:
-          description: OK
   /resources/EmployeeRoleEstablishment/:
     get:
-      summary: 'Get Enrollment'
-      description: ''
-      consumes:
-        - application/json 
+      summary: Returns a list of EmployeeRoleEstablishment.
       produces:
-        - application/json 
+        - application/json
+      responses:
+        200:
+          description: "OK"
       parameters:
       - name: "API-AUTHENTICATION"
         in: "header"
         type: "string"
         required: true
-      - name: "establishment"
-        in: "query"
-        type: "integer"
       - name: "limit"
         in: "query"
         type: "integer"
-      responses:
-        200:
-          description: OK
-  
-  /resources/Department/:
-    get:
-      summary: 'Get Department'
-      description: ''
-      consumes:
-        - application/json 
-      produces:
-        - application/json 
-      parameters:
-      - name: "API-AUTHENTICATION"
-        in: "header"
-        type: "string"
-        required: true
-      - name: "id"
-        in: "query"
-        type: "integer"
-      - name: "limit"
-        in: "query"
-        type: "integer"
-      responses:
-        200:
-          description: OK
   /resources/Role/:
     get:
-      summary: 'Get Role'
-      description: ''
-      consumes:
-        - application/json 
+      summary: Returns a list of Role.
       produces:
-        - application/json 
+        - application/json
+      responses:
+        200:
+          description: "OK"
       parameters:
       - name: "API-AUTHENTICATION"
         in: "header"
         type: "string"
         required: true
-      - name: "establishment"
-        in: "query"
-        type: "integer"
       - name: "limit"
         in: "query"
         type: "integer"
-      responses:
-        200:
-          description: OK
   /resources/Employee/:
     get:
-      summary: 'Get Role'
-      description: ''
-      consumes:
-        - application/json 
+      summary: Returns a list of Employee.
       produces:
-        - application/json 
+        - application/json
+      responses:
+        200:
+          description: "OK"
       parameters:
       - name: "API-AUTHENTICATION"
         in: "header"
         type: "string"
         required: true
-      - name: "id"
-        in: "query"
-        type: "integer"
       - name: "limit"
         in: "query"
         type: "integer"
-      responses:
-        200:
-          description: OK
   /resources/TimeSheetEntry/:
     get:
       summary: 'Get Timesheet'
@@ -152,16 +101,31 @@ paths:
         in: "header"
         type: "string"
         required: true
-      - description: ''
-        name: updated_date__gte
-        in: query
-        type: string  
       - name: "limit"
         in: "query"
         type: "integer"
+      - name: "employee"
+        in: "query"
+        type: "integer"
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "created_date"
+        in: "query"
+        type: "string"
+      - name: "updated_date__gte"
+        in: "query"
+        type: "string"
+      - name: "clock_in"
+        in: "query"
+        type: "string"
+      - name: "clock_out"
+        in: "query"
+        type: "string"
       responses:
         200:
           description: OK
+  
   /reports/hourly_sales/json/:
     get:
       summary: 'Get Live Sales'
@@ -191,6 +155,24 @@ paths:
         200:
           description: OK
   /resources/TimeSchedule/:
+    delete:
+      operationId: "DeleteSchedule"
+      responses:
+        200:
+          description: "The operation was successful."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description: "Delete a schedule for an employee"
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "establishment"
+        in: "query"
+        type: "integer" 
     post:
       operationId: "CreateSchedule"
       responses:
@@ -211,27 +193,4 @@ paths:
         in: "body"
         schema:
           type: "object"
-          properties:
-            department:
-              type: string
-            created_by:
-              type: string
-            updated_by:
-              type: string
-            stage:
-              type: integer
-            shift_begin_time:
-              type: string
-            shift_end_time:
-              type: string
-            updated_date:
-              type: string
-            created_date:
-              type: string
-            establishment:
-              type: string
-            role:
-              type: string
-            employee:
-              type: string
         description: "body_data"

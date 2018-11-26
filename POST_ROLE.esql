@@ -1,0 +1,51 @@
+CREATE COMPUTE MODULE POST_ROLE
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE myRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.TMP_LOCATION AS R;
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.TMP_LOCATION AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		--* SET myRow.ResultSet[] = select R.* from Database.TMP_LOCATION AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		DECLARE i INTEGER 1;
+		DECLARE count INTEGER;
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+		
+		
+
+		--* SET OutputRoot = InputRoot;
+		SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
+		
+		
+		--* SET OutputRoot.JSON.Data.ResultSet.A = InputRoot.JSON.Data.ResultSet[1].NAME;
+
+		
+		--* PROPAGATE TO TERMINAL 'out1';
+		
+		WHILE i <= count DO 
+				
+		SET OutputRoot.JSON.Data.name = InputRoot.JSON.Data.ResultSet[i].NAME;
+		SET OutputRoot.JSON.Data.export_name = '';
+		SET OutputRoot.JSON.Data.location_id = InputRoot.JSON.Data.ResultSet[i].LOCATION_ID;
+
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;
+		-- PROPAGATE TO TERMINAL 'out1';
+		PROPAGATE;
+		
+		SET i = i + 1;
+		END WHILE;
+		
+		PROPAGATE TO TERMINAL 'out2';
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

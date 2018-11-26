@@ -19,7 +19,11 @@ CREATE COMPUTE MODULE INSERT_ESTABLISHMENT
 		--* SET OutputRoot.JSON.Data.a =  InputRoot.JSON.Data.Item.id;
 		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
 		--* SET OutputRoot.JSON.Data.A = InputRoot.JSON.Data.objects.Item[2].email;
-		DELETE FROM Database.MINORDB.db2inst1.ADR_EST AS D;
+		DECLARE my_credentials ROW;
+				
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Revel' AND CE.FLAG = 1 );
+		
+		DELETE FROM Database.ADR_EST AS D;
 		SET SQLCode1 = SQLCODE;
 		SET SQLErrorText1 = SQLERRORTEXT;
 					
@@ -28,7 +32,7 @@ CREATE COMPUTE MODULE INSERT_ESTABLISHMENT
 		DECLARE i INTEGER 1;
 		FOR source AS InputRoot.JSON.Data.objects.Item[] DO
 		insert
-		into Database.MINORDB.db2inst1.ADR_EST
+		into Database.ADR_EST
 		(
 			about_access_to_location,
 			about_description,
@@ -179,13 +183,9 @@ CREATE COMPUTE MODULE INSERT_ESTABLISHMENT
 		SET i = i + 1;
 		END FOR;
 		
-		SET out_msg = CAST(i AS CHARACTER) || 'SQLCode = '||CAST(SQLCode1 AS CHARACTER);
-		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );		
-		PROPAGATE;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '0';
 		
-		SET out_msg = CAST(i AS CHARACTER) || 'SQLErrorText = '||SQLErrorText1;
-		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 874 );
-		PROPAGATE;
 		RETURN TRUE;
 	END;
 
@@ -218,7 +218,7 @@ CREATE COMPUTE MODULE UPDATE_ADDRESS
 		DECLARE i INTEGER 1;
 		FOR source AS InputRoot.JSON.Data.objects.Item[] DO
 		
-		UPDATE Database.MINORDB.db2inst1.ADR_EST AS AE
+		UPDATE Database.ADR_EST AS AE
  		SET active_adr = source.active,
 			alias = source.alias,
 			building_number = source.building_number,
@@ -268,75 +268,6 @@ END MODULE;
 
 
 
-CREATE COMPUTE MODULE SELECT_LOCATION
-	CREATE FUNCTION Main() RETURNS BOOLEAN
-	BEGIN
-		DECLARE inms CHARACTER;
-		DECLARE out_msg CHARACTER;
-		DECLARE SQLErrorText1 CHARACTER;   
-		DECLARE SQLCode1 INTEGER;  
-		DECLARE data_length INTEGER; 
-		DECLARE location_data CHARACTER;  
-		DECLARE mySharedRow ROW;
-		SET SQLErrorText1 = '';
-
-		--* SET mySharedRow.location[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R;
-		
-		SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.MINORDB.db2inst1.M_LOCATION AS A);
-		
-		--* insert into Database.MINORDB.db2inst1.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
-			
-		DECLARE i INTEGER 1;
-		
-		FOR source AS OutputRoot.JSON.Data.ResultSet[] DO
-		insert
-		into Database.MINORDB.db2inst1.M_LOCATION
-		(
-			id_adr,
-		id_est,
-		latitude,
-		longitude,	
-		name,
-		site_number,
-		district,
-		line_1,
-		line_2,
-		province,
-		zipcode)
-		VALUES
-		(
-			source.ID_ADR,
-			source.ID_EST,
-			source.LATITUDE,
-			source.LONGITUDE,	
-			source.NAME,
-			--* source.SITE_NUMBER,
-			'',
-			source.DISTRICT,
-			source.LINE_1,
-			source.LINE_2,
-			source.PROVINCE,
-			source.ZIPCODE);
-
-							
-		SET SQLCode1 = SQLCODE;
-		SET SQLErrorText1 = SQLERRORTEXT;
-					
-		COMMIT;		
-
-		
-		SET i = i + 1;
-		END FOR;
-		
-
-		
-		PROPAGATE;
-		
-		RETURN TRUE;
-		
-	END;
-
-END MODULE;
 
 
 
@@ -352,12 +283,15 @@ CREATE COMPUTE MODULE POST_LOCATION
 		DECLARE myRow ROW;
 		SET SQLErrorText1 = '';
 
-		--* SET mySharedRow.location[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R;
-		--* SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.MINORDB.db2inst1.M_LOCATION AS A);
-		--* insert into Database.MINORDB.db2inst1.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
-		--* SET myRow.ResultSet[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.MINORDB.db2inst1.M_LOCATION AS A);
+		--* SET mySharedRow.location[] = select R.* from Database.ADR_EST AS R;
+		--* SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+		--* SET myRow.ResultSet[] = select R.* from Database.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A);
 		DECLARE i INTEGER 1;
 		DECLARE count INTEGER;
+		DECLARE my_credentials ROW;
+		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+		
 
 		--* SET OutputRoot = InputRoot;
 		SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
@@ -374,14 +308,21 @@ CREATE COMPUTE MODULE POST_LOCATION
 		SET OutputRoot.JSON.Data.short_name = '';
 		SET OutputRoot.JSON.Data.latitude = InputRoot.JSON.Data.ResultSet[i].LATITUDE;
 		SET OutputRoot.JSON.Data.longitude = InputRoot.JSON.Data.ResultSet[i].LONGITUDE;
-		SET OutputRoot.JSON.Data.address = InputRoot.JSON.Data.ResultSet[i].LINE_1 || InputRoot.JSON.Data.ResultSet[i].LINE_2 || InputRoot.JSON.Data.ResultSet[i].DISTRICT || InputRoot.JSON.Data.ResultSet[i].PROVINCE || InputRoot.JSON.Data.ResultSet[i].ZIPCODE;
-		
+		SET OutputRoot.JSON.Data.address = InputRoot.JSON.Data.ResultSet[i].LINE_1 || ' ' || InputRoot.JSON.Data.ResultSet[i].LINE_2 || ',' || InputRoot.JSON.Data.ResultSet[i].PROVINCE || ',' || InputRoot.JSON.Data.ResultSet[i].ZIPCODE;
+		-- SET OutputRoot.JSON.Data.address = InputRoot.JSON.Data.ResultSet[i].LINE_1 || ' ' || InputRoot.JSON.Data.ResultSet[i].LINE_2 || ' ' || InputRoot.JSON.Data.ResultSet[i].DISTRICT || ' ' || InputRoot.JSON.Data.ResultSet[i].PROVINCE || ' ' || InputRoot.JSON.Data.ResultSet[i].ZIPCODE;
+		SET OutputRoot.JSON.Data.time_zone = 'Asia/Bangkok';
+		SET OutputRoot.JSON.Data.name = InputRoot.JSON.Data.ResultSet[i].NAME;
+		SET OutputRoot.JSON.Data.latitude = InputRoot.JSON.Data.ResultSet[i].LATITUDE;
+		SET OutputRoot.JSON.Data.longitude = InputRoot.JSON.Data.ResultSet[i].LONGITUDE;
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;
 		PROPAGATE TO TERMINAL 'out1';
 		PROPAGATE;
 		
 		SET i = i + 1;
 		END WHILE;
 		
+		
+		PROPAGATE TO TERMINAL 'out2';
 		RETURN TRUE;
 		
 	END;
@@ -392,7 +333,7 @@ END MODULE;
 
 
 
-CREATE COMPUTE MODULE UPDATE_LOCATION
+CREATE COMPUTE MODULE UPDATE_M_FLAG
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
 		DECLARE inms CHARACTER;
@@ -406,7 +347,7 @@ CREATE COMPUTE MODULE UPDATE_LOCATION
 		
 
 		
-		UPDATE Database.MINORDB.db2inst1.M_LOCATION AS AE
+		UPDATE Database.M_LOCATION AS AE
  		SET location_id = InputRoot.JSON.Data.id,
 			flag = '0'
 		WHERE AE.name = InputRoot.JSON.Data.name;
@@ -427,34 +368,6 @@ CREATE COMPUTE MODULE UPDATE_LOCATION
 		
 		SET OutputRoot.JSON = InputRoot.JSON;
 		PROPAGATE TO TERMINAL 'out1';
-		
-		RETURN TRUE;
-		
-	END;
-
-END MODULE;
-
-
-
-
-CREATE COMPUTE MODULE PREPARE_M_LOCATION
-	CREATE FUNCTION Main() RETURNS BOOLEAN
-	BEGIN
-		DECLARE inms CHARACTER;
-		DECLARE out_msg CHARACTER;
-		DECLARE SQLErrorText1 CHARACTER;   
-		DECLARE SQLCode1 INTEGER;  
-		DECLARE data_length INTEGER; 
-		DECLARE location_data CHARACTER;  
-		DECLARE myRow ROW;
-		SET SQLErrorText1 = '';
-
-		--* SET mySharedRow.location[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R;
-		SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.MINORDB.db2inst1.M_STORESTAT AS R where R.id_adr not in (select A.id_adr from Database.MINORDB.db2inst1.M_LOCATION AS A);
-		--* insert into Database.MINORDB.db2inst1.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
-		--* SET myRow.ResultSet[] = select R.* from Database.MINORDB.db2inst1.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.MINORDB.db2inst1.M_LOCATION AS A);
-		
-		PROPAGATE;
 		
 		RETURN TRUE;
 		

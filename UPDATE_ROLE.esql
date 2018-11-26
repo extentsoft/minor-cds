@@ -1,0 +1,53 @@
+
+
+CREATE COMPUTE MODULE UPDATE_ROLE
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		SET SQLErrorText1 = '';
+		--* SET data_length = CARDINALITY(InputRoot.JSON.Data.objects.Item[]);
+		--* SET out_msg = CAST(data_length AS CHARACTER);
+		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
+		
+		--* SET out_msg = InputRoot.JSON.Data.Item.id;
+		--* SET OutputRoot.BLOB.BLOB = CAST(InputRoot AS BLOB  CCSID 874);
+		-- *SET OutputRoot.JSON.Data.*[1] =  InputRoot.JSON.Data.*[1];
+		--* SET OutputRoot.JSON = InputRoot.JSON;
+		--* SET OutputRoot.JSON.Data.a =  InputRoot.JSON.Data.Item.id;
+		--* SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB  CCSID 874);
+		--*SET OutputRoot.JSON.Data.A = InputRoot.JSON.Data.objects;
+		
+		DECLARE i INTEGER 1;
+		FOR source AS InputRoot.JSON.Data.objects.Item[] DO
+		
+		UPDATE Database.TMP_ROLE AS R
+ 		SET id_role = source.id,
+ 			active_role = source.active,
+			name_role = source.name,
+			resource_uri_role = source.resource_uri
+			 WHERE R.role = source.resource_uri;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;
+		
+		SET i = i + 1;
+		END FOR;
+		
+		SET out_msg = 'SQLCode = '||CAST(SQLCode1 AS CHARACTER);
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 1208 );		
+		PROPAGATE TO TERMINAL 'out1';
+		
+		SET out_msg = 'SQLErrorText = '||SQLErrorText1;
+		SET OutputRoot.BLOB.BLOB = CAST(out_msg AS BLOB CCSID 1208 );
+		PROPAGATE TO TERMINAL 'out1';
+		
+		RETURN TRUE;
+		
+	END;
+END MODULE;

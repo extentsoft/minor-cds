@@ -14,11 +14,7 @@ CREATE COMPUTE MODULE SA_Datastream_Update_TDS_Key
 		
 		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;								
 		SET OutputRoot.JSON.Data.data_stream_id = InputRoot.JSON.Data.id;
-		SET OutputRoot.JSON.Data.data_streamable_type = 'Location';
-		SET OutputRoot.JSON.Data.data_streamable_id = InputLocalEnvironment.Variables.location;
-		-- SET OutputRoot.JSON.Data.data_streamable_id = InputRoot.JSON.Data.location;
-		SET OutputRoot.JSON.Data.rostering_ratio = 15;
-		
+		SET OutputRoot.JSON.Data.data_streamable_type = 'Organisation';
 		PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
 		
 		RETURN FALSE;

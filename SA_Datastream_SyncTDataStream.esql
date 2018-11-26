@@ -11,7 +11,7 @@ CREATE COMPUTE MODULE SA_Datastream_SyncTDataStream
 		SET count = CARDINALITY(InputRoot.JSON.Data.ResultSet[]);
      	
      	WHILE i <= count DO 
-			INSERT INTO Database.MINORDB.db2inst1.M_STORESTAT(loc_id, ds_id, ds_type, dj_id) VALUES( InputRoot.JSON.Data.ResultSet[i].LOCATION_ID, -2,'adjust_sales', -2);
+			INSERT INTO Database.MINORDB.db2inst1.M_STORESTAT(loc_id, ds_id, ds_type, dj_id) VALUES( InputRoot.JSON.Data.ResultSet[i].LOCATION_ID, -2,'transaction', -2);
 			COMMIT;
 		
 			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;			
@@ -20,11 +20,10 @@ CREATE COMPUTE MODULE SA_Datastream_SyncTDataStream
 			-- ss = staging sales
 			-- ts# = test sales 
 		
-			SET OutputRoot.JSON.Data.name = 'fs_' || InputRoot.JSON.Data.ResultSet[i].LOCATION_ID || '_060918';
+			SET OutputRoot.JSON.Data.name = 'tt30_' || InputRoot.JSON.Data.ResultSet[i].LOCATION_ID || '_ds';
 			SET OutputRoot.JSON.Data.data_interval = 900;
 		
-			SET OutputLocalEnvironment.Variables.location = InputRoot.JSON.Data.ResultSet[i].LOCATION_ID;			
-			
+		
 		
 			PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
 		

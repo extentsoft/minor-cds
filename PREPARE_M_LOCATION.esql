@@ -1,0 +1,139 @@
+CREATE COMPUTE MODULE PREPARE_M_LOCATION
+
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE inms CHARACTER;
+		DECLARE out_msg CHARACTER;
+		DECLARE SQLErrorText1 CHARACTER;   
+		DECLARE SQLCode1 INTEGER;  
+		DECLARE data_length INTEGER; 
+		DECLARE location_data CHARACTER;  
+		DECLARE mySharedRow ROW;
+		SET SQLErrorText1 = '';
+
+		--* SET mySharedRow.location[] = select R.* from Database.ADR_EST AS R;
+		-- DELETE FROM Database.M_LOCATION AS D;
+		-- SET SQLCode1 = SQLCODE;
+		-- SET SQLErrorText1 = SQLERRORTEXT;
+					
+		-- COMMIT;	
+		
+		SET OutputRoot.JSON.Data.ResultSet[] = select R.* from Database.ADR_EST AS R where R.id_adr not in (select A.id_adr from Database.M_LOCATION AS A) and R.active_adr = '1' and R.active_est = '1' and R.site_number <> '999999';
+		
+		--* insert into Database.M_LOCATION (id_adr)	VALUES (OutputRoot.JSON.Data.ResultSet[5].ID_ADR);
+			
+		DECLARE i INTEGER 1;
+		
+		FOR source AS OutputRoot.JSON.Data.ResultSet[] DO
+		insert
+		into Database.M_LOCATION
+		(
+			id_adr,
+		id_est,
+		active_adr,
+		active_est,
+		latitude,
+		longitude,	
+		name,
+		email,
+		resource_uri_est,
+		site_number,
+		district,
+		line_1,
+		line_2,
+		province,
+		zipcode)
+		VALUES
+		(
+			source.ID_ADR,
+			source.ID_EST,
+			source.ACTIVE_ADR,
+			source.ACTIVE_EST,
+			source.LATITUDE,
+			source.LONGITUDE,	
+			source.NAME,
+			source.EMAIL,
+			source.RESOURCE_URI_EST,
+			source.SITE_NUMBER,
+			-- '',
+			source.DISTRICT,
+			source.LINE_1,
+			source.LINE_2,
+			source.PROVINCE,
+			source.ZIPCODE);
+
+							
+		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+					
+		COMMIT;		
+
+		
+		SET i = i + 1;
+		END FOR;
+		
+		
+		
+		SET OutputRoot.JSON.Data.ReconTemp[] = select A.* from Database.ADR_EST AS A;
+
+		FOR source AS OutputRoot.JSON.Data.ReconTemp[] DO
+			
+		UPDATE Database.M_LOCATION AS A
+		
+ 		SET name = source.NAME,
+ 			flag = '1',
+ 			latitude = source.LATITUDE,
+ 			longitude = source.LONGITUDE
+ 		where source.RESOURCE_URI_EST = A.resource_uri_est;
+ 		
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		COMMIT;
+ 		
+ 		END FOR;
+		
+		SET OutputRoot.JSON.Data.UpdateLoc[] = select B.* from Database.T_LOCATION AS B,Database.M_LOCATION AS A where B.name = A.name;
+
+		FOR source AS OutputRoot.JSON.Data.UpdateLoc[] DO
+			
+		UPDATE Database.M_LOCATION AS A
+		
+ 		SET location_id = source.LOCATION_ID,
+ 			flag = '0'
+ 		where source.NAME = A.name;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		COMMIT;
+ 		
+ 		END FOR;
+ 		
+ 		
+ 		-- SET OutputRoot.JSON.Data.UpdateFlag[] = select A.* from Database.T_LOCATION AS B,Database.M_LOCATION AS A where (B.location_id = A.location_id) and ((B.address <> (A.line_1 || ' ' || A.line_2 || ' ' || A.district || ',' || A.province || ',' || A.zipcode)) or (B.name <> A.name) or (B.latitude <> A.latitude) or (B.longitude <> A.longitude));
+		SET OutputRoot.JSON.Data.UpdateFlag[] = select A.* from Database.T_LOCATION AS B,Database.M_LOCATION AS A where (B.location_id = A.location_id) and ((B.address <> (A.line_1 || ' ' || A.line_2 || ',' || A.province || ',' || A.zipcode)) or (B.name <> A.name) or (B.latitude <> A.latitude) or (B.longitude <> A.longitude));
+		
+		FOR source AS OutputRoot.JSON.Data.UpdateFlag[] DO
+			
+		UPDATE Database.M_LOCATION AS A
+		
+ 		SET flag = '2',
+ 			name = source.NAME,
+ 			latitude = source.LATITUDE,
+ 			longitude = source.LONGITUDE
+ 		where source.LOCATION_ID = A.location_id ;
+ 		SET SQLCode1 = SQLCODE;
+		SET SQLErrorText1 = SQLERRORTEXT;
+ 		--* WHERE SP.COMPANY = InputBody.Message.Company
+ 		COMMIT;
+ 		
+ 		END FOR;
+ 		
+ 		SET OutputRoot.JSON.Data.Update[] = select A.* from Database.M_LOCATION AS A where A.flag = '2';
+		
+		
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

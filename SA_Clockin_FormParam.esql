@@ -14,10 +14,12 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 			SET count = CARDINALITY(InputRoot.JSON.Data.objects.Item[]);
 			SET count = count + 1;
 			
+			DECLARE source CHARACTER;
+			
 			DECLARE my_credentials ROW;
 			DECLARE worklog ROW;
 			DECLARE employee_info ROW;
-			SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.MINORDB.db2inst1.C_CREDENTIALS AS CC, Database.MINORDB.db2inst1.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
+			SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
 			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;			
 			
 			DECLARE e_row ROW;
@@ -30,16 +32,17 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 				-- check if records exists 
 				-- SET OutputRoot.JSON.Data.key = my_credentials.Item[1].SYSTEM_KEY;	
 				-- PROPAGATE TO TERMINAL 'out1';
+				DECLARE returnValue BOOLEAN;
+				SET returnValue = SLEEP(1000);
 				
-				
-				SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;	
-				SET employee_info.Item[] = (SELECT ME.ID AS EID FROM Database.MINORDB.db2inst1.M_EMPLOYEE AS ME WHERE ME.RESOURCE_URI = InputRoot.JSON.Data.objects.Item[i].employee );		
+				-- SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;	
+				SET employee_info.Item[] = (SELECT ME.ID AS EID FROM Database.M_EMPLOYEE AS ME WHERE ME.RESOURCE_URI = InputRoot.JSON.Data.objects.Item[i].employee );		
 				
 				
 				SET e_emp_count = CARDINALITY(employee_info.Item[]);
 				SET e_row.Item[] = (
 					SELECT MW.CREATED_DATE AS CREATED_DATE 
-					FROM Database.MINORDB.db2inst1.M_WORKLOG AS MW 
+					FROM Database.M_WORKLOG AS MW 
 					WHERE 
 						MW.CREATED_DATE = REPLACE(InputRoot.JSON.Data.objects.Item[i].created_date, 'T', ' ') 
 						AND MW.CLOCK_IN = REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_in, 'T', ' ') 
@@ -48,66 +51,84 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 					
 				SET e_row_count = CARDINALITY(e_row.Item[]);
 				
+				-- SET OutputRoot.BLOB.BLOB = CAST(InputRoot.JSON.Data.objects.Item[i].employee || 'T' AS BLOB  CCSID 874);
+				-- PROPAGATE TO TERMINAL 'out2';
+				
+				
+				
 				-- IGNORE RECORDS PROCESSED 
-				-- e_emp_count <= 0 meaning no employee would be recognized
-				-- e_row_count <= 0 meaning records are completely kept  
-				-- Otherwise, skip it.
-				IF e_row_count <= 0 OR e_emp_count <= 0 THEN
-					
+				IF e_row_count = 0 THEN
+					-- SET OutputRoot.BLOB.BLOB = CAST(CAST(e_row_count AS CHARACTER) || 'T' AS BLOB  CCSID 874);
+					-- PROPAGATE TO TERMINAL 'out2';
+					SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;
 					IF InputRoot.JSON.Data.objects.Item[i].clock_out IS NULL THEN
 						-- *** PERFORM CLOCKIN *** 
 					
-					
-						DECLARE MyTimeStamp TIMESTAMP;
-						DECLARE SourceTimeStamp CHARACTER;
-						SET SourceTimeStamp =  REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_in, 'T', ' ');
-						SET MyTimeStamp = CAST (SourceTimeStamp AS TIMESTAMP FORMAT Tpattern);
-						
-						SET OutputRoot.JSON.Data.user_id = employee_info.Item[1].EID;
-						SET OutputRoot.JSON.Data.type = 'clockin';
-						SET OutputRoot.JSON.Data.time = CAST( (MyTimeStamp - EPOCH_TIME)SECOND AS INTEGER);
-		
-						
-						-- EXAMPLE
-						-- DECLARE iso_pattern CHARACTER 'yyyy-MM-dd HH:mm:ss';
-						-- DECLARE d1 CHARACTER '2018-08-19T13:50:22';
-						-- SET d1 = REPLACE(d1,'T',' ');
-						-- DECLARE t1 TIMESTAMP;
-						-- SET t1 = CAST(d1 AS TIMESTAMP FORMAT iso_pattern);	
-						-- DECLARE EPOCH_TIME, IN_TIMESTAMP TIMESTAMP;
-						-- SET EPOCH_TIME = CAST('1970-01-01T00:00:00.000+07.00' AS TIMESTAMP FORMAT 'IU');
-						-- SET IN_TIMESTAMP = t1;
-						-- SET OutputRoot.JSON.Data.i1 = CAST( (IN_TIMESTAMP - EPOCH_TIME)SECOND AS INTEGER);
-						
-						
-						INSERT INTO Database.MINORDB.db2inst1.M_WORKLOG(clock_in, created_date, updated_date, resource_uri_employee) 
-						VALUES(
-							REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_in, 'T', ' '), 
-							REPLACE(InputRoot.JSON.Data.objects.Item[i].created_date, 'T', ' '),
-							REPLACE(InputRoot.JSON.Data.objects.Item[i].updated_date, 'T', ' '), 
-							InputRoot.JSON.Data.objects.Item[i].employee);
-						COMMIT;
-					
-						-- INSERT INTO Database.MINORDB.db2inst1.M_WORKLOG(clock_in, created_date, resource_uri_employee) 
-						-- VALUES(InputRoot.JSON.Data.objects.Item[i].clock_in, InputRoot.JSON.Data.objects.Item[i].created_date, InputRoot.JSON.Data.objects.Item[i].employee);
-						-- COMMIT;
-						
-						
-						PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
-					ELSE -- there is relating record  
-						-- 1. check if clock_in is existed
-											
-						DECLARE source CHARACTER;
 						SET source = REPLACE(InputRoot.JSON.Data.objects.Item[i].created_date, 'T', ' ');
-						
-						-- get relating record 
-						SET worklog.Item[] = (SELECT MW.clock_in FROM Database.MINORDB.db2inst1.M_WORKLOG AS MW WHERE MW.created_date = source );
+						SET worklog.Item[] = (SELECT MW.clock_in FROM Database.M_WORKLOG AS MW WHERE MW.RESOURCE_URI_EMPLOYEE=InputRoot.JSON.Data.objects.Item[i].employee and MW.created_date = source );
 						SET worklog_count = CARDINALITY(worklog.Item[]);
 						
+						-- SET OutputRoot.BLOB.BLOB = CAST(CAST(worklog_count AS CHARACTER) AS BLOB  CCSID 874);
+						-- PROPAGATE TO TERMINAL 'out2';
 						
-						-- if there is a relevant record 
+						
+						IF worklog_count = 0 THEN
+							
+							DECLARE MyTimeStamp TIMESTAMP;
+							DECLARE SourceTimeStamp CHARACTER;
+							SET SourceTimeStamp =  REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_in, 'T', ' ');
+							SET MyTimeStamp = CAST (SourceTimeStamp AS TIMESTAMP FORMAT Tpattern);
+							
+							SET OutputRoot.JSON.Data.user_id = employee_info.Item[1].EID;
+							SET OutputRoot.JSON.Data.type = 'clockin';
+							SET OutputRoot.JSON.Data.time = CAST( (MyTimeStamp - EPOCH_TIME)SECOND AS INTEGER);
+			
+							
+							-- EXAMPLE
+							-- DECLARE iso_pattern CHARACTER 'yyyy-MM-dd HH:mm:ss';
+							-- DECLARE d1 CHARACTER '2018-08-19T13:50:22';
+							-- SET d1 = REPLACE(d1,'T',' ');
+							-- DECLARE t1 TIMESTAMP;
+							-- SET t1 = CAST(d1 AS TIMESTAMP FORMAT iso_pattern);	
+							-- DECLARE EPOCH_TIME, IN_TIMESTAMP TIMESTAMP;
+							-- SET EPOCH_TIME = CAST('1970-01-01T00:00:00.000+07.00' AS TIMESTAMP FORMAT 'IU');
+							-- SET IN_TIMESTAMP = t1;
+							-- SET OutputRoot.JSON.Data.i1 = CAST( (IN_TIMESTAMP - EPOCH_TIME)SECOND AS INTEGER);
+							
+							
+							INSERT INTO Database.M_WORKLOG(clock_in, created_date, updated_date, resource_uri_employee) 
+							VALUES(
+								REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_in, 'T', ' '), 
+								REPLACE(InputRoot.JSON.Data.objects.Item[i].created_date, 'T', ' '),
+								REPLACE(InputRoot.JSON.Data.objects.Item[i].updated_date, 'T', ' '), 
+								InputRoot.JSON.Data.objects.Item[i].employee);
+							COMMIT;
+							
+							-- INSERT INTO Database.M_WORKLOG(clock_in, created_date, resource_uri_employee) 
+							-- VALUES(InputRoot.JSON.Data.objects.Item[i].clock_in, InputRoot.JSON.Data.objects.Item[i].created_date, InputRoot.JSON.Data.objects.Item[i].employee);
+							-- COMMIT;
+							
+							
+							PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+							
+							-- SET OutputRoot.BLOB.BLOB = CAST('PERFORM CLOCKIN' AS BLOB  CCSID 874);
+							-- PROPAGATE TO TERMINAL 'out2';
+						END IF;
+					ELSE 
+					
+						-- 1. check if clock_in is existed					
+						
+						SET source = REPLACE(InputRoot.JSON.Data.objects.Item[i].created_date, 'T', ' ');
+						SET worklog.Item[] = (SELECT MW.clock_in FROM Database.M_WORKLOG AS MW WHERE MW.created_date = source );
+						SET worklog_count = CARDINALITY(worklog.Item[]);
+						
+						-- SET OutputRoot.BLOB.BLOB = CAST(CAST(worklog_count AS CHARACTER) AS BLOB  CCSID 874);
+						-- PROPAGATE TO TERMINAL 'out2';
+						
+						
 						IF worklog_count > 0 THEN
 							-- *** PERFORM ONLY CLOCKOUT ***
+							
 							
 							DECLARE MyTimeStamp TIMESTAMP;
 							DECLARE SourceTimeStamp CHARACTER;
@@ -119,7 +140,7 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 							
 							
 							
-							UPDATE Database.MINORDB.db2inst1.M_WORKLOG AS MW 
+							UPDATE Database.M_WORKLOG AS MW 
 							SET 
 								CLOCK_OUT = REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_out, 'T', ' '), 
 								UPDATED_DATE = REPLACE(InputRoot.JSON.Data.objects.Item[i].updated_date, 'T', ' ')
@@ -129,8 +150,13 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 							
 							
 							PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
+							
+							-- SET OutputRoot.BLOB.BLOB = CAST('PERFORM ONLY CLOCKOUT' AS BLOB  CCSID 874);
+							-- PROPAGATE TO TERMINAL 'out2';
 						ELSE
-							-- *** PERFORM BOTH CLOCKIN and CLOCKOUT *** 
+							-- *** PERFORM BOTH CLOCKIN and CLOCKOUT *** 						
+							
+							
 							DECLARE MyTimeStamp TIMESTAMP;
 							DECLARE SourceTimeStamp CHARACTER;
 							
@@ -141,6 +167,7 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 							SET OutputRoot.JSON.Data.time = CAST( (MyTimeStamp - EPOCH_TIME)SECOND AS INTEGER);
 							PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
 							
+							SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;	
 							SET SourceTimeStamp =  REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_out, 'T', ' ');
 							SET MyTimeStamp = CAST (SourceTimeStamp AS TIMESTAMP FORMAT Tpattern);
 							SET OutputRoot.JSON.Data.user_id = employee_info.Item[1].EID;
@@ -148,8 +175,10 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 							SET OutputRoot.JSON.Data.time = CAST( (MyTimeStamp - EPOCH_TIME)SECOND AS INTEGER);
 							PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment MESSAGE OutputRoot;
 							
+							-- SET OutputRoot.BLOB.BLOB = CAST('PERFORM BOTH CLOCKIN and CLOCKOUT' AS BLOB  CCSID 874);
+							-- PROPAGATE TO TERMINAL 'out2';
 							
-							INSERT INTO Database.MINORDB.db2inst1.M_WORKLOG(clock_in, clock_out, created_date, updated_date, resource_uri_employee) 
+							INSERT INTO Database.M_WORKLOG(clock_in, clock_out, created_date, updated_date, resource_uri_employee) 
 							VALUES(
 								REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_in, 'T', ' '), 
 								REPLACE(InputRoot.JSON.Data.objects.Item[i].clock_out, 'T', ' '), 
@@ -173,6 +202,8 @@ CREATE COMPUTE MODULE SA_Clockin_FormParam
 			CALL CopyEntireMessage();
 			PROPAGATE;
 		END IF;
+		
+		PROPAGATE TO TERMINAL 'out1';
 		
 		RETURN FALSE;
 	END;
