@@ -8,26 +8,54 @@ CREATE COMPUTE MODULE SA_Payroll_Compute
 		DECLARE my_credentials ROW;	
 		DECLARE target DATE;
 		DECLARE pattern CHARACTER 'yyyy-MM-dd';
-		DECLARE tmp_target, tmp_month, tmp_year CHARACTER; 
-		DECLARE mod_year INTEGER;
+		DECLARE tmp_target, tmp_date, tmp_month, tmp_year CHARACTER; 
+		DECLARE mod_year, mod_date  INTEGER;
 		
 		SET target = CAST(CURRENT_DATE AS DATE FORMAT pattern);
 		SET tmp_target = CAST(target AS CHARACTER FORMAT 'yyyy-MM-dd');
-		SET tmp_month = SUBSTRING(tmp_target FROM 6 FOR 2);
-		SET tmp_year = SUBSTRING(tmp_target FROM 1 FOR 4);
-		SET mod_year = CAST(tmp_year AS INTEGER);
+		SET tmp_date = SUBSTRING(tmp_target FROM 9 FOR 2);		
+		SET mod_date = CAST(tmp_date AS INTEGER);
 		
-		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."from" = SUBSTRING(tmp_target FROM 1 FOR 8) || '01';
+		IF mod_date >= 1 AND mod_date <= 15 THEN
+			-- 16-31 of previous month
+			SET target = CAST( (CURRENT_DATE - INTERVAL '1' MONTH) AS DATE FORMAT pattern);
+			SET tmp_target = CAST(target AS CHARACTER FORMAT 'yyyy-MM-dd');
+			SET tmp_month = SUBSTRING(tmp_target FROM 6 FOR 2);
+			SET tmp_year = SUBSTRING(tmp_target FROM 1 FOR 4);
+			SET mod_year = CAST(tmp_year AS INTEGER);
 		
-		IF tmp_month = '01' OR tmp_month = '03' OR tmp_month = '05' OR tmp_month = '07' OR tmp_month = '08' OR tmp_month = '10' OR tmp_month = '12' THEN
-			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '31';
-		ELSEIF tmp_month = '04' OR tmp_month = '06' OR tmp_month = '09' OR tmp_month = '11' THEN			
-			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '30'; 	
-		ELSEIF tmp_month = '02' AND (MOD(mod_year, 4) = 0) THEN				
-			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '29';
-		ELSE 
-			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '28'; 
-		END IF;
+			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."from" = SUBSTRING(tmp_target FROM 1 FOR 8) || '16';
+		
+			IF tmp_month = '01' OR tmp_month = '03' OR tmp_month = '05' OR tmp_month = '07' OR tmp_month = '08' OR tmp_month = '10' OR tmp_month = '12' THEN
+				SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '31';
+			ELSEIF tmp_month = '04' OR tmp_month = '06' OR tmp_month = '09' OR tmp_month = '11' THEN			
+				SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '30'; 	
+			ELSEIF tmp_month = '02' AND (MOD(mod_year, 4) = 0) THEN				
+				SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '29';
+			ELSE 
+				SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '28'; 
+			END IF;
+			
+		
+		ELSEIF mod_date >= 16 AND mod_date <= 31 THEN 
+			-- 1-15 of this month 
+			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."from" = SUBSTRING(tmp_target FROM 1 FOR 8) || '01';
+			SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '15';
+		END IF; 
+			
+			
+		
+		-- SET OutputLocalEnvironment.Destination.REST.Request.Parameters."from" = SUBSTRING(tmp_target FROM 1 FOR 8) || '01';
+		
+		-- IF tmp_month = '01' OR tmp_month = '03' OR tmp_month = '05' OR tmp_month = '07' OR tmp_month = '08' OR tmp_month = '10' OR tmp_month = '12' THEN
+		-- 	SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '31';
+		-- ELSEIF tmp_month = '04' OR tmp_month = '06' OR tmp_month = '09' OR tmp_month = '11' THEN			
+		--	SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '30'; 	
+		-- ELSEIF tmp_month = '02' AND (MOD(mod_year, 4) = 0) THEN				
+		--	SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '29';
+		-- ELSE 
+		-- 	SET OutputLocalEnvironment.Destination.REST.Request.Parameters."to" = SUBSTRING(tmp_target FROM 1 FOR 8) || '28'; 
+		-- END IF;
 		
 		SET my_credentials.Item[] = (SELECT CC.SYSTEM_KEY AS SYSTEM_KEY FROM Database.C_CREDENTIALS AS CC, Database.C_ENVIRONMENT AS CE WHERE CC.SYSTEM_CODE = CE.REFCODE AND CE.SYSTEM_NAME = 'Tanda' AND CE.FLAG = 1 );	
 		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."Authorization" = my_credentials.Item[1].SYSTEM_KEY;							
@@ -35,7 +63,7 @@ CREATE COMPUTE MODULE SA_Payroll_Compute
 		-- SET OutputLocalEnvironment.Destination.REST.Request.Parameters."user_ids" = my_credentials.Item[1].SYSTEM_KEY;								
 		 
 		
-		PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment;
+		-- PROPAGATE TO TERMINAL 'out' ENVIRONMENT OutputLocalEnvironment;
 		
 		RETURN TRUE;
 	END;
