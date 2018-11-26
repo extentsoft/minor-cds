@@ -6,16 +6,16 @@
     <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/minor-mds-prd/icons/full/obj16/SA_Payroll.gif"/>
     <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/minor-mds-prd/icons/full/obj30/SA_Payroll.gif"/>
     <composition>
-      <nodes xmi:type="ComIbmWSInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="150,291" URLSpecifier="/sync/payroll">
+      <nodes xmi:type="ComIbmWSInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="50,45" URLSpecifier="/sync/payroll">
         <translation xmi:type="utility:ConstantString" string="HTTP Input"/>
       </nodes>
-      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_3" location="294,365" dataSource="MINORDB" computeExpression="esql://routine/#SA_Payroll_GetUserShift.Main" computeMode="all">
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_3" location="194,119" dataSource="MINORDB" computeExpression="esql://routine/#SA_Payroll_GetUserShift.Main" computeMode="all">
         <translation xmi:type="utility:ConstantString" string="GetUserShift"/>
       </nodes>
-      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="596,419" dataSource="MINORDB" computeExpression="esql://routine/#SA_PostUserShift.Main">
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="496,173" dataSource="MINORDB" computeExpression="esql://routine/#SA_PostUserShift.Main" computeMode="all">
         <translation xmi:type="utility:ConstantString" string="PostUserShift"/>
       </nodes>
-      <nodes xmi:type="ComIbmRESTRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_5" location="425,547" definitionType="swagger_20" definitionFile="TandaAPI.yaml" operationName="getShifts" acceptCompressedResponses="true">
+      <nodes xmi:type="ComIbmRESTRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_5" location="325,301" definitionType="swagger_20" definitionFile="TandaAPI.yaml" operationName="getShifts" acceptCompressedResponses="true">
         <translation xmi:type="utility:ConstantString" string="getShifts"/>
         <parameters name="Authorization" expression=""/>
         <parameters name="show_costs" expression=""/>
@@ -23,20 +23,29 @@
         <parameters name="from" expression=""/>
         <parameters name="to" expression=""/>
       </nodes>
-      <nodes xmi:type="ComIbmWSReply.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_6" location="1219,375">
+      <nodes xmi:type="ComIbmWSReply.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_6" location="696,242">
         <translation xmi:type="utility:ConstantString" string="HTTP Reply"/>
       </nodes>
-      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2" location="232,477" dataSource="MINORDB" computeExpression="esql://routine/#SA_Payroll_Compute.Main">
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2" location="132,231" dataSource="MINORDB" computeExpression="esql://routine/#SA_Payroll_Compute.Main" computeMode="all">
         <translation xmi:type="utility:ConstantString" string="Compute"/>
       </nodes>
-      <nodes xmi:type="ComIbmFileOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_8" location="796,347" outputDirectory="C:\Minor\Log" outputFilename="payroll" writeMode="writeInPlace" outputMode="append" fileFtp="true" remoteTransferType="SFTP" fileFtpServer="10.40.42.46:22" fileFtpUser="identityftp" fileFtpDirectory="/home/ubuntu/ftpfileoutput" fileFtpRemoteOutputMode="append">
+      <nodes xmi:type="ComIbmFileOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_8" location="696,101" outputDirectory="/wmb_logs/data" outputFilename="payroll" writeMode="writeInPlace" outputMode="append" remoteTransferType="SFTP" fileFtpServer="10.9.5.140:22" fileFtpUser="MNIB2FTPID" fileFtpDirectory="/incoming" fileFtpRemoteOutputMode="append">
         <translation xmi:type="utility:ConstantString" string="File Output1"/>
+      </nodes>
+      <nodes xmi:type="ComIbmFileOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="465,29" outputDirectory="/wmb_logs/data" outputFilename="payroll_data" writeMode="writeInPlace" outputMode="append" remoteTransferType="SFTP" fileFtpServer="10.40.42.46:22" fileFtpUser="identityftp" fileFtpDirectory="/home/ubuntu/ftpfileoutput" fileFtpRemoteOutputMode="append">
+        <translation xmi:type="utility:ConstantString" string="File Output"/>
+      </nodes>
+      <nodes xmi:type="ComIbmFileOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_9" location="497,244" outputDirectory="/wmb_logs/error" outputFilename="payroll_error" writeMode="writeInPlace" outputMode="append" remoteTransferType="SFTP" fileFtpServer="10.40.42.46:22" fileFtpUser="identityftp" fileFtpDirectory="/home/ubuntu/ftpfileoutput" fileFtpRemoteOutputMode="append">
+        <translation xmi:type="utility:ConstantString" string="File Output2"/>
       </nodes>
       <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_5" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
       <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_3" targetNode="FCMComposite_1_2" sourceNode="FCMComposite_1_1" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
       <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_4" targetNode="FCMComposite_1_5" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
       <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_6" targetNode="FCMComposite_1_6" sourceNode="FCMComposite_1_4" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
       <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_7" targetNode="FCMComposite_1_8" sourceNode="FCMComposite_1_4" sourceTerminalName="OutTerminal.out1" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_1" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_2" targetNode="FCMComposite_1_9" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.failure" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_9" targetNode="FCMComposite_1_9" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.error" targetTerminalName="InTerminal.in"/>
     </composition>
     <propertyOrganizer/>
     <stickyBoard/>

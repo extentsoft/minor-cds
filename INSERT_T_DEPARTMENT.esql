@@ -41,7 +41,7 @@ CREATE COMPUTE MODULE INSERT_T_DEPARTMENT
 		SET i = i + 1;
 		END FOR;
 		SET OutputLocalEnvironment.Destination.REST.Request.Parameters."API-AUTHENTICATION" = my_credentials.Item[1].SYSTEM_KEY;
-		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '0';
+		SET OutputLocalEnvironment.Destination.REST.Request.Parameters.limit = '2000';
 	END;
 
 END MODULE;
