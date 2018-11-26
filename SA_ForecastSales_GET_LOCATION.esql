@@ -1,14 +1,13 @@
-
-
-CREATE COMPUTE MODULE SA_Sales_Get_Locationn
+					
+CREATE COMPUTE MODULE SA_ForecastSales_GET_LOCATION
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
 		-- CALL CopyMessageHeaders();
 		-- CALL CopyEntireMessage();
-		
-		SET OutputRoot.JSON.Data.ResultSet[] = (SELECT ML.ID_ADR, MSS.DS_ID, ML.LOCATION_ID FROM Database.MINORDB.db2inst1.M_LOCATION AS ML, Database.MINORDB.db2inst1.M_STORESTAT AS MSS WHERE ML.LOCATION_ID = MSS.LOC_ID AND MSS.DS_TYPE = 'actual_sales');
+		SET OutputRoot.JSON.Data.ResultSet[] = (SELECT T.SITE_NUMBER,T.LOCATION_ID FROM Database.M_LOCATION AS T);
 		PROPAGATE TO TERMINAL 'out' MESSAGE OutputRoot;
-		RETURN FALSE;
+		
+		RETURN TRUE;
 	END;
 
 	CREATE PROCEDURE CopyMessageHeaders() BEGIN
@@ -25,4 +24,3 @@ CREATE COMPUTE MODULE SA_Sales_Get_Locationn
 		SET OutputRoot = InputRoot;
 	END;
 END MODULE;
-

@@ -154,6 +154,34 @@ paths:
       responses:
         200:
           description: OK
+  /resources/AdjustedForecastedSalesResource/:        
+    get:
+      summary: 'Get Forecast Data'
+      description: ''
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+      - name: "API-AUTHENTICATION"
+        in: "header"
+        type: "string"
+        required: true
+      - name: "limit"
+        in: "query"
+        type: "integer"
+      - name: "establishment"
+        in: "query"
+        type: "integer"
+      - name: "date_from"
+        in: "query"
+        type: "string"
+      - name: "date_to"
+        in: "query"
+        type: "string"
+      responses:
+        200:
+          description: OK
   /resources/TimeSchedule/:
     delete:
       operationId: "DeleteSchedule"
